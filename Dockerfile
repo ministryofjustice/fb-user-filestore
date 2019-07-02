@@ -9,7 +9,6 @@ COPY . .
 RUN bundle install --jobs 4 --retry 5 --without test development
 
 RUN apk del .build-deps
-
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 RUN chown -R appuser:appgroup .
 USER appuser
