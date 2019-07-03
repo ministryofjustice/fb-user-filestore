@@ -9,9 +9,9 @@ COPY . .
 RUN bundle install --jobs 4 --retry 5 --without test development
 
 RUN apk del .build-deps
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN chown -R appuser:appgroup .
-USER appuser
+RUN addgroup -S appgroup && adduser -S 1001 -G appgroup
+RUN chown -R 1001:appgroup .
+USER 1001
 
 ARG RAILS_ENV=production
 CMD bundle exec rails s -e ${RAILS_ENV} --binding=0.0.0.0
