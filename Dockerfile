@@ -1,7 +1,9 @@
 FROM ruby:2.6.3-alpine3.9
 
 RUN apk add --update --no-cache --virtual .build-deps build-base libgcrypt-dev \
- libxml2-dev libxslt-dev nodejs postgresql-contrib postgresql-dev file clamav-daemon
+ libxml2-dev libxslt-dev nodejs postgresql-contrib postgresql-dev
+RUN apk add file
+RUN apk add clamav-daemon
 
 WORKDIR /usr/src/app
 
