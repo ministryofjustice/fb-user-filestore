@@ -20,7 +20,7 @@ spec:
         image: "754256621582.dkr.ecr.eu-west-2.amazonaws.com/formbuilder/fb-user-filestore-api:{{ .Values.circleSha1 }}"
         volumeMounts:
           - name: tmp-files
-            mountPath: /usr/src/app/please_work
+            mountPath: /tmp/files
         imagePullPolicy: Always
         ports:
           - containerPort: 3000
