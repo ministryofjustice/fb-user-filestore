@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN bundle install --jobs 4 --retry 5 --without test development
+RUN bundle install --jobs 4 --retry 5
 
 RUN apk del .build-deps
 RUN addgroup -S appgroup && adduser -S 1001 -G appgroup
