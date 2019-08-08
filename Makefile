@@ -40,7 +40,7 @@ install_build_dependencies: init
 
 
 build_image: install_build_dependencies
-	docker build -t ${ECR_REPO_URL}:latest-${env_stub} -t ${ECR_REPO_URL}:${CIRCLE_SHA1} -f ./Dockerfile .
+	docker build --build-arg BUNDLE_FLAGS="--without test development" -t ${ECR_REPO_URL}:latest-${env_stub} -t ${ECR_REPO_URL}:${CIRCLE_SHA1} -f ./Dockerfile .
 
 login: init
 	@eval $(shell aws ecr get-login --no-include-email --region eu-west-2)
@@ -58,7 +58,7 @@ stop:
 	$(DOCKER_COMPOSE) down -v
 
 build: stop
-	$(DOCKER_COMPOSE) build
+	$(DOCKER_COMPOSE) build --build-arg BUNDLE_FLAGS=''
 
 serve: stop build
 	$(DOCKER_COMPOSE) up
