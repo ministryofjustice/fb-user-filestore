@@ -10,6 +10,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 ARG BUNDLE_FLAGS
+RUN gem install bundler
 RUN bundle install --jobs 4 --retry 5 ${BUNDLE_FLAGS}
 
 RUN apk del .build-deps
