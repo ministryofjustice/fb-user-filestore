@@ -32,7 +32,7 @@ module Storage
 
       def created_at
         meta_data = client.head_object({bucket: bucket, key: key})
-        meta_data[:last_modified]
+        meta_data.last_modified
       end
 
       private
