@@ -9,7 +9,12 @@ module Storage
       end
 
       def exists?
-        client.head_object({bucket: bucket, key: key})
+        begin
+          client.head_object(bucket: bucket, key: key)
+          true
+        rescue Aws::S3::Errors::NotFound
+          false
+        end
       end
 
       def purge_from_source!
