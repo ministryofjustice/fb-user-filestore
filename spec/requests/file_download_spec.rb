@@ -62,7 +62,7 @@ RSpec.describe 'file download', type: :request do
     context 'when there is a problem' do
       it 'returns 503' do
         downloader = double('downloader', exists?: true)
-        allow(Storage::Disk::Downloader).to receive(:new).and_return(downloader)
+        allow(Storage::S3::Downloader).to receive(:new).and_return(downloader)
         allow(downloader).to receive(:contents).and_raise(StandardError.new)
 
         do_get!
