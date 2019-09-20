@@ -1,21 +1,21 @@
 class Cryptography
-  def initialize(file:)
-    @file = file
+  def initialize(encryption_key:)
+    @encryption_key = encryption_key
   end
 
-  def encrypt
+  def encrypt(file:)
     cipher.encrypt
     cipher.iv = encryption_iv
     cipher.key = encryption_key
-    encrypted_data = cipher.update(@file) + cipher.final
+    encrypted_data = cipher.update(file) + cipher.final
     encrypted_data.unpack1('H*')
   end
 
-  def decrypt
+  def decrypt(file:)
     cipher.decrypt
     cipher.iv = encryption_iv
     cipher.key = encryption_key
-    data = [@file].pack('H*').unpack('C*').pack('c*')
+    data = [file].pack('H*').unpack('C*').pack('c*')
     cipher.update(data) + cipher.final
   end
 
@@ -27,7 +27,7 @@ class Cryptography
     ENV['ENCRYPTION_IV']
   end
 
-  def encryption_key
-    ENV['ENCRYPTION_KEY']
-  end
+  private
+
+  attr_accessor :encryption_key
 end

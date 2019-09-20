@@ -47,7 +47,7 @@ module Storage
       def decrypt(file)
         file = File.open(file, 'rb')
         data = file.read
-        result = Cryptography.new(file: data).decrypt
+        result = Cryptography.new(encryption_key: encryption_key).decrypt(file: data)
         file = File.open(file, 'wb')
         file.write(result)
         file.close
@@ -59,6 +59,10 @@ module Storage
 
       def client
         @client ||= Aws::S3::Client.new
+      end
+
+      def encryption_key
+        ENV['ENCRYPTION_KEY']
       end
     end
   end

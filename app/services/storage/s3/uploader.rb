@@ -44,7 +44,7 @@ module Storage
         file = File.open(path, 'rb')
         data = file.read
         file.close
-        result = Cryptography.new(file: data).encrypt
+        result = Cryptography.new(encryption_key: encryption_key).encrypt(file: data)
         save_encrypted_to_disk(result)
       end
 
@@ -73,6 +73,10 @@ module Storage
 
       def random_filename
         @random_filename ||= SecureRandom.hex
+      end
+
+      def encryption_key
+        ENV['ENCRYPTION_KEY']
       end
     end
   end
