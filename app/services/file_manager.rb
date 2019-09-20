@@ -5,7 +5,7 @@ class FileManager
   attr_reader :file
 
   def initialize(encoded_file:, user_id:, service_slug:,
-                 encrypted_user_id_and_token:, options: {})
+    encrypted_user_id_and_token:, options: {})
     @encoded_file = encoded_file
     @user_id = user_id
     @service_slug = service_slug
@@ -84,11 +84,13 @@ class FileManager
   end
 
   def key
-    KeyForFile.new(service_slug: service_slug,
-                   user_id: user_id,
-                   file_fingerprint: file_fingerprint,
-                   days_to_live: days_to_live,
-                   cipher_key: Digest::MD5.hexdigest(encrypted_user_id_and_token)).call
+    KeyForFile.new(
+      service_slug: service_slug,
+      user_id: user_id,
+      file_fingerprint: file_fingerprint,
+      days_to_live: days_to_live,
+      cipher_key: Digest::MD5.hexdigest(encrypted_user_id_and_token)
+    ).call
   end
 
   def ensure_quarantine_folder_exists
