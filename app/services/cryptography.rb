@@ -1,6 +1,7 @@
 class Cryptography
-  def initialize(encryption_key:)
+  def initialize(encryption_key:, encryption_iv:)
     @encryption_key = encryption_key
+    @encryption_iv = encryption_iv
   end
 
   def encrypt(file:)
@@ -23,11 +24,7 @@ class Cryptography
     @cipher ||= OpenSSL::Cipher.new 'AES-256-CBC'
   end
 
-  def encryption_iv
-    ENV['ENCRYPTION_IV']
-  end
-
   private
 
-  attr_accessor :encryption_key
+  attr_accessor :encryption_key, :encryption_iv
 end

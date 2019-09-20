@@ -2,7 +2,13 @@ require 'rails_helper'
 
 RSpec.describe Cryptography do
   let(:encryption_key) { ENV['ENCRYPTION_KEY'] }
-  let(:cryptography) { Cryptography.new(encryption_key: encryption_key) }
+  let(:encryption_iv) { ENV['ENCRYPTION_IV'] }
+  let(:cryptography) do
+    Cryptography.new(
+      encryption_key: encryption_key,
+      encryption_iv: encryption_iv
+    )
+  end
 
   describe '#encrypt' do
     let(:file) { file_fixture('lorem_ipsum.txt').read }

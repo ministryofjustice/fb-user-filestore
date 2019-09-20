@@ -47,7 +47,11 @@ module Storage
       def decrypt(file)
         file = File.open(file, 'rb')
         data = file.read
-        result = Cryptography.new(encryption_key: encryption_key).decrypt(file: data)
+        result = Cryptography.new(
+          encryption_key: encryption_key,
+          encryption_iv: encryption_iv
+        ).decrypt(file: data)
+
         file = File.open(file, 'wb')
         file.write(result)
         file.close
@@ -63,6 +67,10 @@ module Storage
 
       def encryption_key
         ENV['ENCRYPTION_KEY']
+      end
+
+      def encryption_iv
+        ENV['ENCRYPTION_IV']
       end
     end
   end
