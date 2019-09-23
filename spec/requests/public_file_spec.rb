@@ -31,14 +31,19 @@ RSpec.describe 'POST /service/:service_slug/user/:user_identifier/public-file', 
     post url, params: body.to_json, headers: headers
   end
 
-  it 'returns an encryption init vector and key' do
-    post url, params: body.to_json, headers: headers
-    expect(JSON.parse(response.body).keys).to eq(["encryption_key", "encryption_iv"])
-  end
-
   it 'uploads a re-encrypted file to S3' do
     expect(s3).to receive(:put_object)
     post url, params: body.to_json, headers: headers
+  end
+
+  it 'returns an encryption a URL, init vector and key' do
+    post url, params: body.to_json, headers: headers
+    expect(JSON.parse(response.body).keys).to eq(["url", "encryption_key", "encryption_iv"])
+  end
+
+  it 'includes an S3 url' do
+    post url, params: body.to_json, headers: headers
+    expect(URI.parse(JSON.parse(response.body)["url"]).host).to include('s3')
   end
 
   context 'without the correct payload' do
