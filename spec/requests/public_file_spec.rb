@@ -18,6 +18,7 @@ RSpec.describe 'POST /service/:service_slug/user/:user_identifier/public-file', 
       .and_return('ServiceToken')
     allow(Aws::S3::Client).to receive(:new).and_return(s3)
     s3.stub_responses(:get_object, { body: file_fixture('encrypted_file').read })
+    s3.stub_responses(:put_object, {})
   end
 
   it 'responds with a 201 created' do
@@ -33,6 +34,11 @@ RSpec.describe 'POST /service/:service_slug/user/:user_identifier/public-file', 
   it 'returns an encryption init vector and key' do
     post url, params: body.to_json, headers: headers
     expect(JSON.parse(response.body).keys).to eq(["encryption_key", "encryption_iv"])
+  end
+
+  it 'uploads a re-encrypted file to S3' do
+    expect(s3).to receive(:put_object)
+    post url, params: body.to_json, headers: headers
   end
 
   context 'without the correct payload' do

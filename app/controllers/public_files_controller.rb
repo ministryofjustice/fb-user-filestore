@@ -3,22 +3,24 @@ class PublicFilesController < ApplicationController
 
   def create
     # 1. Download File
-    unencrypted_file = downloader.contents
+    file_data = downloader.contents
     # 2. Generate key
     encryption_key = ssl.random_key
     encryption_iv = ssl.random_iv
 
     # 3. Re-encrypt file
-    result = Cryptography.new(
+    reencrypted_file_data = Cryptography.new(
       encryption_key: encryption_key,
       encryption_iv: encryption_iv
-    ).encrypt(file: unencrypted_file)
+    ).encrypt(file: file_data)
 
     # 4. Send to S3
-    # file = Tempfile.new.binmode
-    # file.write(result)
+    uploader.upload(file_data: reencrypted_file_data)
 
     # 5. Generate signed S3 url
+    # TODO
+
+
     # 6. Return URL and key
     payload = {
       encryption_key: Base64.strict_encode64(encryption_key),
@@ -38,6 +40,10 @@ class PublicFilesController < ApplicationController
     @downloader ||= Storage::S3::Downloader.new(key: key, bucket: bucket)
   end
 
+  def uploader
+    @uploader ||= Storage::S3::Uploader.new(key: key, bucket: public_bucket)
+  end
+
   def key
     @key ||= KeyForFile.new(
       user_id: params[:user_id],
@@ -50,6 +56,11 @@ class PublicFilesController < ApplicationController
 
   def bucket
     ENV['AWS_S3_BUCKET_NAME']
+  end
+
+
+  def public_bucket
+    ENV['AWS_S3_PUBLIC_BUCKET_NAME']
   end
 
   def file_fingerprint
