@@ -9,7 +9,7 @@ module Storage
         @bucket = bucket
       end
 
-      def upload(file: file)
+      def upload(file:)
         client.put_object(bucket: bucket, key: key, body: file.read)
       end
 
