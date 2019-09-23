@@ -37,13 +37,11 @@ class DownloadsController < ApplicationController
   end
 
   def key
-    @key ||= KeyForFile.new(
-      user_id: params[:user_id],
-      service_slug: params[:service_slug],
-      file_fingerprint: file_fingerprint,
-      days_to_live: days_to_live,
-      cipher_key: Digest::MD5.hexdigest(request.headers['x-encrypted-user-id-and-token'])
-    ).call
+    @key ||= KeyForFile.new(user_id: params[:user_id],
+                            service_slug: params[:service_slug],
+                            file_fingerprint: file_fingerprint,
+                            days_to_live: days_to_live,
+                            cipher_key: Digest::MD5.hexdigest(request.headers['x-encrypted-user-id-and-token'])).call
   end
 
   def error_large_file(size)
