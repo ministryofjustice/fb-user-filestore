@@ -2,19 +2,37 @@ class PublicFilesController < ApplicationController
   before_action :check_params, only: [:create]
 
   def create
+    # 1. Download File
     unencrypted_file = downloader.contents
-    # TODO:
-    # 1. Download File DONE
     # 2. Generate key
+    encryption_key = ssl.random_key
+    encryption_iv = ssl.random_iv
+
     # 3. Re-encrypt file
+    result = Cryptography.new(
+      encryption_key: encryption_key,
+      encryption_iv: encryption_iv
+    ).encrypt(file: unencrypted_file)
+
     # 4. Send to S3
+    # file = Tempfile.new.binmode
+    # file.write(result)
+
     # 5. Generate signed S3 url
     # 6. Return URL and key
+    payload = {
+      encryption_key: Base64.strict_encode64(encryption_key),
+      encryption_iv: Base64.strict_encode64(encryption_iv)
+    }
 
-    render json: {}, status: 201
+    render json: payload.to_json, status: 201
   end
 
   private
+
+  def ssl
+    @ssl ||= OpenSSL::Cipher.new 'AES-256-CBC'
+  end
 
   def downloader
     @downloader ||= Storage::S3::Downloader.new(key: key, bucket: bucket)

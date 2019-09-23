@@ -30,6 +30,11 @@ RSpec.describe 'POST /service/:service_slug/user/:user_identifier/public-file', 
     post url, params: body.to_json, headers: headers
   end
 
+  it 'returns an encryption init vector and key' do
+    post url, params: body.to_json, headers: headers
+    expect(JSON.parse(response.body).keys).to eq(["encryption_key", "encryption_iv"])
+  end
+
   context 'without the correct payload' do
     it 'responds with error message' do
       post url, params: {}.to_json, headers: headers
