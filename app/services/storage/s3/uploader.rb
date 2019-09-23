@@ -9,8 +9,8 @@ module Storage
         @bucket = bucket
       end
 
-      def upload(file:)
-        client.put_object(bucket: bucket, key: key, body: file.read)
+      def upload(file_data:)
+        client.put_object(bucket: bucket, key: key, body: file_data)
       end
 
       def exists?

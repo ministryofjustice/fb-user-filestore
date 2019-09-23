@@ -35,8 +35,8 @@ RSpec.describe Storage::S3::Uploader do
 
 
   describe '#upload' do
-    let(:file) do
-      File.new(file_fixture('lorem_ipsum.txt'), 'rb')
+    let(:file_data) do
+      File.read(file_fixture('lorem_ipsum.txt'))
     end
 
     before do
@@ -44,9 +44,8 @@ RSpec.describe Storage::S3::Uploader do
     end
 
     it 'uploads file to s3' do
-      expect(s3).to receive(:put_object).with(bucket: bucket, key: key, body: file.read)
-      file.rewind
-      subject.upload(file: file)
+      expect(s3).to receive(:put_object).with(bucket: bucket, key: key, body: file_data)
+      subject.upload(file_data: file_data)
     end
   end
 

@@ -51,11 +51,8 @@ class FileManager
   def upload
     file_data = decode_file_data(encoded_file)
     encrypted_file_data = encrypt_file_data(file_data)
-    file_object = generate_temp_file(encrypted_file_data)
 
-    uploader.upload(file: file_object)
-
-    delete_temp_file(file_object)
+    uploader.upload(file_data: encrypted_file_data)
   end
 
   def file_fingerprint
@@ -89,17 +86,6 @@ class FileManager
 
   def uploader
     Storage::S3::Uploader.new(key: key, bucket: bucket)
-  end
-
-  def generate_temp_file(data)
-    tmp_file = Tempfile.new
-    tmp_file.write(data)
-    tmp_file.rewind
-    tmp_file
-  end
-
-  def delete_temp_file(file_object)
-    file_object.unlink
   end
 
   def decode_file_data(data)
