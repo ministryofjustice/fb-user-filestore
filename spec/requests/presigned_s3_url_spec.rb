@@ -1,16 +1,18 @@
 require 'rails_helper'
 
-RSpec.describe 'POST /service/:service_slug/user/:user_identifier/public-file', type: :request do
+RSpec.describe 'POST /presigned-s3-url', type: :request do
   let(:service_slug) { 'my-service' }
   let(:user_identifier) { SecureRandom::uuid }
+  let(:fingerprint_with_prefix) do
+    '28d-aaa59621acecd4b1596dd0e96968c6cec3fae7927613a12c357e7a62e1187aaa'
+  end
   let(:headers) do
     {
       'content-type' => 'application/json',
       'X-Encrypted-User-Id-And-Token' => '12345678901234567890123456789012'
     }
   end
-  let(:url) { "/service/#{service_slug}/user/#{user_identifier}/public-file" }
-  let(:body) { { url: 'http://fb-user-filestore-api-svc-test-dev.formbuilder-platform-test-dev/service/ioj/user/a239313d-4d2d-4a16-b5ef-69d6e8e53e86/28d-aaa59621acecd4b1596dd0e96968c6cec3fae7927613a12c357e7a62e1187aaa' } }
+  let(:url) { "/service/#{service_slug}/user/#{user_identifier}/#{fingerprint_with_prefix}/presigned-s3-url" }
   let(:s3) { Aws::S3::Client.new(stub_responses: true) }
 
   before do
@@ -22,34 +24,27 @@ RSpec.describe 'POST /service/:service_slug/user/:user_identifier/public-file', 
   end
 
   it 'responds with a 201 created' do
-    post url, params: body.to_json, headers: headers
+    post url, params: {}.to_json, headers: headers
     expect(response.status).to eq(201)
   end
 
   it 'downloads the file from S3' do
     expect(s3).to receive(:get_object).once
-    post url, params: body.to_json, headers: headers
+    post url, params: {}.to_json, headers: headers
   end
 
   it 'uploads a re-encrypted file to S3' do
     expect(s3).to receive(:put_object)
-    post url, params: body.to_json, headers: headers
+    post url, params: {}.to_json, headers: headers
   end
 
   it 'returns an encryption a URL, init vector and key' do
-    post url, params: body.to_json, headers: headers
+    post url, params: {}.to_json, headers: headers
     expect(JSON.parse(response.body).keys).to eq(["url", "encryption_key", "encryption_iv"])
   end
 
   it 'includes an S3 url' do
-    post url, params: body.to_json, headers: headers
+    post url, params: {}.to_json, headers: headers
     expect(URI.parse(JSON.parse(response.body)["url"]).host).to include('s3')
-  end
-
-  context 'without the correct payload' do
-    it 'responds with error message' do
-      post url, params: {}.to_json, headers: headers
-      expect(response.status).to eq(400)
-    end
   end
 end

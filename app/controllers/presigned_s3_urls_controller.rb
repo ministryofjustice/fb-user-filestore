@@ -1,6 +1,4 @@
-class PublicFilesController < ApplicationController
-  before_action :check_params, only: [:create]
-
+class PresignedS3UrlsController < ApplicationController
   def create
     encryption_key = ssl.random_key
     encryption_iv = ssl.random_iv
@@ -59,16 +57,10 @@ class PublicFilesController < ApplicationController
   end
 
   def file_fingerprint
-    params[:url].split('/').last
+    params[:fingerprint_with_prefix]
   end
 
   def cipher_key
     Digest::MD5.hexdigest(request.headers['x-encrypted-user-id-and-token'])
-  end
-
-  def check_params
-    if params[:url].blank?
-      return render json: { code: 400, name: 'invalid.url-missing' }, status: 400
-    end
   end
 end
