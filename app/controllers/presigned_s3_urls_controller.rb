@@ -49,11 +49,11 @@ class PresignedS3UrlsController < ApplicationController
   end
 
   def bucket
-    ENV['AWS_S3_BUCKET_NAME']
+    ENV.fetch('AWS_S3_BUCKET_NAME')
   end
 
   def public_bucket
-    ENV['AWS_S3_PUBLIC_BUCKET_NAME']
+    ENV.fetch('AWS_S3_EXTERNAL_BUCKET_NAME')
   end
 
   def file_fingerprint
