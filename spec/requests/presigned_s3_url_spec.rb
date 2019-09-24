@@ -47,4 +47,31 @@ RSpec.describe 'POST /presigned-s3-url', type: :request do
     post url, params: {}.to_json, headers: headers
     expect(URI.parse(JSON.parse(response.body)["url"]).host).to include('s3')
   end
+
+  context 'when decrypting the file reencrypted in S3' do
+    let(:original_file_decrypted) do
+      Cryptography.new(
+        encryption_key: ENV.fetch('ENCRYPTION_KEY'),
+        encryption_iv: ENV.fetch('ENCRYPTION_IV')
+      ).decrypt(file: file_fixture('encrypted_file').read)
+    end
+    let(:s3_put_request) do
+      s3.api_requests.find{|a| a[:operation_name] == :put_object}
+    end
+    let(:reencrypted_file_data) { s3_put_request[:params][:body] }
+
+    before do
+      post url, params: {}.to_json, headers: headers
+    end
+
+    it 'can decrypt the reencrypted file with the returned keys' do
+      parsed_response = JSON.parse(response.body)
+      decrypted_file_data = Cryptography.new(
+        encryption_key: Base64.strict_decode64(parsed_response["encryption_key"]),
+        encryption_iv: Base64.strict_decode64(parsed_response["encryption_iv"])
+      ).decrypt(file: reencrypted_file_data)
+
+      expect(decrypted_file_data).to eq(original_file_decrypted)
+    end
+  end
 end
