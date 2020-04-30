@@ -8,8 +8,18 @@ class DownloadsController < ApplicationController
       send_data downloader.contents, status: 200
       downloader.purge_from_destination!
     else
-      render json: { code: 404, name: 'not-found' }, status: 404
+      return error_file_not_found
     end
+  rescue StandardError
+    return error_download_server_error
+  end
+
+  def content_length
+    return render json: {
+      code: 200, fingerprint: file_fingerprint, content_length: downloader.content_length
+    }, status: 200
+  rescue Aws::S3::Errors::NotFound
+    return error_file_not_found
   rescue StandardError
     return error_download_server_error
   end
@@ -66,5 +76,9 @@ class DownloadsController < ApplicationController
   def error_download_server_error
     render json: { code: 503,
                    name: 'unavailable.file-retrieval-failed' }, status: 503
+  end
+
+  def error_file_not_found
+    render json: { code: 404, name: 'not-found' }, status: 404
   end
 end

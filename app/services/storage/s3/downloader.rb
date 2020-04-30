@@ -31,6 +31,11 @@ module Storage
         temp_file.read
       end
 
+      def content_length
+        res = client.head_object(bucket: bucket, key: key)
+        res.content_length
+      end
+
       private
 
       attr_accessor :key, :bucket

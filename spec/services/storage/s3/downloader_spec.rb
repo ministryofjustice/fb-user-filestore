@@ -27,6 +27,10 @@ RSpec.describe Storage::S3::Downloader do
       it 'contains correct contents' do
         expect(subject.contents).to eql("lorem ipsum\n")
       end
+
+      it 'has the correct content length' do
+        expect(subject.content_length).to eql(150)
+      end
     end
   end
 end
