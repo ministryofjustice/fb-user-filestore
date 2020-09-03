@@ -45,6 +45,7 @@ jobs:
             PLATFORM_ENV: test
             DEPLOYMENT_ENV: dev
             K8S_NAMESPACE: formbuilder-platform-test-dev
+            POD_NAME: fb-user-filestore-api-test-dev
           command: './deploy-scripts/bin/deploy'
       - run:
           name: deploy to test production
@@ -53,6 +54,7 @@ jobs:
             PLATFORM_ENV: test
             DEPLOYMENT_ENV: production
             K8S_NAMESPACE: formbuilder-platform-test-production
+            POD_NAME: fb-user-filestore-api-test-production
           command: './deploy-scripts/bin/deploy'
   build_and_deploy_to_live:
     working_directory: ~/circle/git/fb-user-filestore
@@ -83,6 +85,7 @@ jobs:
             PLATFORM_ENV: live
             DEPLOYMENT_ENV: dev
             K8S_NAMESPACE: formbuilder-platform-live-dev
+            POD_NAME: fb-user-filestore-api-live-dev
           command: './deploy-scripts/bin/deploy'
       - run:
           name: deploy to live production
@@ -91,6 +94,7 @@ jobs:
             PLATFORM_ENV: live
             DEPLOYMENT_ENV: production
             K8S_NAMESPACE: formbuilder-platform-live-production
+            POD_NAME: fb-user-filestore-api-live-production
           command: './deploy-scripts/bin/deploy'
   trigger_acceptance_tests:
     docker:
