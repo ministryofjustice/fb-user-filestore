@@ -1,0 +1,41 @@
+version: 2
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+    timezone: Europe/London
+  open-pull-requests-limit: 10
+  reviewers:
+  - tomas-stefano
+  - brenetic
+  - mattempty
+  - njseeto
+  ignore:
+  - dependency-name: aws-sdk-s3
+    versions:
+    - 1.92.0
+  - dependency-name: rspec-rails
+    versions:
+    - 4.1.1
+  - dependency-name: rails
+    versions:
+    - 6.1.2
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+    timezone: Europe/London
+  open-pull-requests-limit: 10
+  reviewers:
+  - tomas-stefano
+  - brenetic
+  - mattempty
+  - njseeto
+  ignore:
+  - dependency-name: ruby
+    versions:
+    - 3.0.0.pre.alpine3.12
+    - 3.0.1.pre.alpine3.12
