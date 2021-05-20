@@ -54,7 +54,7 @@ class UploadsController < ApplicationController
       render json: hash, status: 201
     end
   rescue StandardError => e
-    Raven.capture_exception(e)
+    Sentry.capture_exception(e)
     return error_upload_server_error
   ensure
     @file_manager.delete_file if @file_manager
