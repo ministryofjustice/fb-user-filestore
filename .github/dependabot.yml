@@ -12,16 +12,6 @@ updates:
   - brenetic
   - mattempty
   - njseeto
-  ignore:
-  - dependency-name: aws-sdk-s3
-    versions:
-    - 1.92.0
-  - dependency-name: rspec-rails
-    versions:
-    - 4.1.1
-  - dependency-name: rails
-    versions:
-    - 6.1.2
 - package-ecosystem: docker
   directory: "/"
   schedule:
@@ -34,8 +24,3 @@ updates:
   - brenetic
   - mattempty
   - njseeto
-  ignore:
-  - dependency-name: ruby
-    versions:
-    - 3.0.0.pre.alpine3.12
-    - 3.0.1.pre.alpine3.12
