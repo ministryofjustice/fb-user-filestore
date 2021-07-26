@@ -224,15 +224,15 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.2)
-    ruby2_keywords (0.0.4)
+    ruby2_keywords (0.0.5)
     sentry-rails (4.6.1)
       railties (>= 5.0)
       sentry-ruby-core (~> 4.6.0)
-    sentry-ruby (4.6.1)
+    sentry-ruby (4.6.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       faraday (>= 1.0)
-      sentry-ruby-core (= 4.6.1)
-    sentry-ruby-core (4.6.1)
+      sentry-ruby-core (= 4.6.2)
+    sentry-ruby-core (4.6.2)
       concurrent-ruby
       faraday
     shellany (0.0.1)
@@ -269,7 +269,7 @@ DEPENDENCIES
   rails (~> 6.1.4)
   rspec-rails (~> 5.0)
   sentry-rails (~> 4.6.1)
-  sentry-ruby (~> 4.6.1)
+  sentry-ruby (~> 4.6.2)
   timecop
   tzinfo-data
 
