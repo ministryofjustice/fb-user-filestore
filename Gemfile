@@ -7,7 +7,7 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jwt'
 gem 'metrics_adapter', '0.2.0'
-gem 'puma', '~> 5.3'
+gem 'puma', '~> 5.4'
 gem 'rails', '~> 6.1.4'
 gem 'sentry-rails', '~> 4.6.3'
 gem 'sentry-ruby', '~> 4.6.3'
