@@ -91,17 +91,35 @@ RSpec.describe FileManager do
     end
 
     context 'when file is not permitted' do
-      subject do
-        described_class.new(encoded_file: encoded_file,
-                            user_id: user_id,
-                            service_slug: service_slug,
-                            encrypted_user_id_and_token: encrypted_user_id_and_token,
-                            bucket: bucket,
-                            options: { allowed_types: ['plain/text'] })
+      context 'when allowed types are present' do
+        subject do
+          described_class.new(encoded_file: encoded_file,
+                              user_id: user_id,
+                              service_slug: service_slug,
+                              encrypted_user_id_and_token: encrypted_user_id_and_token,
+                              bucket: bucket,
+                              options: { allowed_types: ['plain/text'] })
+        end
+
+        it 'returns false' do
+          expect(subject.type_permitted?).to be_falsey
+        end
       end
 
-      it 'returns false' do
-        expect(subject.type_permitted?).to be_falsey
+      context 'when mime type is invalid' do
+        subject do
+          described_class.new(encoded_file: encoded_file,
+                              user_id: user_id,
+                              service_slug: service_slug,
+                              encrypted_user_id_and_token: encrypted_user_id_and_token,
+                              bucket: bucket,
+                              options: { allowed_types: ['*/*'] })
+        end
+
+        it 'returns false' do
+          allow(subject).to receive(:mime_type).and_return('application/wps-writer')
+          expect(subject.type_permitted?).to be_falsey
+        end
       end
     end
   end

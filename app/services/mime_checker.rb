@@ -5,7 +5,7 @@ class MimeChecker
   end
 
   def call
-    return false if type.blank? || subtype.blank?
+    return false if mime_type_invalid? || type.blank? || subtype.blank?
 
     whitelist.detect do |whitelisted|
       whitelisted_type, whitelisted_subtype = whitelisted.split('/')
@@ -14,6 +14,10 @@ class MimeChecker
       (type == whitelisted_type && whitelisted_subtype == "*") ||
       (type == whitelisted_type && subtype == whitelisted_subtype)
     end
+  end
+
+  def mime_type_invalid?
+    MIME::Types[value][0].blank?
   end
 
   private
