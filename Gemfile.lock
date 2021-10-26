@@ -91,7 +91,7 @@ GEM
       dotenv (= 2.7.6)
       railties (>= 3.2)
     erubi (1.10.0)
-    faraday (1.7.1)
+    faraday (1.8.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
@@ -230,7 +230,7 @@ GEM
       rspec-support (~> 3.10)
     rspec-support (3.10.2)
     ruby2_keywords (0.0.5)
-    sentry-rails (4.7.1)
+    sentry-rails (4.7.3)
       railties (>= 5.0)
       sentry-ruby-core (~> 4.7.0)
     sentry-ruby (4.7.1)
@@ -274,7 +274,7 @@ DEPENDENCIES
   puma (~> 5.5)
   rails (~> 6.1.4)
   rspec-rails (~> 5.0)
-  sentry-rails (~> 4.7.1)
+  sentry-rails (~> 4.7.3)
   sentry-ruby (~> 4.7.1)
   timecop
   tzinfo-data
