@@ -11,7 +11,7 @@ gem 'metrics_adapter', '0.2.0'
 gem 'puma', '~> 5.5'
 gem 'rails', '~> 6.1.4'
 gem 'sentry-rails', '~> 4.7.3'
-gem 'sentry-ruby', '~> 4.7.1'
+gem 'sentry-ruby', '~> 4.7.3'
 gem 'tzinfo-data'
 
 group :development, :test do
