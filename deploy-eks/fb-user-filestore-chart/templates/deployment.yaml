@@ -1,0 +1,114 @@
+---
+# web front-end
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "fb-user-filestore-api-{{ .Values.environmentName }}"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: "fb-user-filestore-api-{{ .Values.environmentName }}"
+  template:
+    metadata:
+      labels:
+        app: "fb-user-filestore-api-{{ .Values.environmentName }}"
+        appGroup: "fb-user-filestore"
+        fb-service-token-cache-access: "true"
+        tier: "frontend"
+    spec:
+      serviceAccountName: "formbuilder-user-filestore-{{ .Values.environmentName }}"
+      containers:
+      - name: "fb-user-filestore-api-{{ .Values.environmentName }}"
+        image: "754256621582.dkr.ecr.eu-west-2.amazonaws.com/formbuilder/fb-user-filestore-api:{{ .Values.circleSha1 }}"
+        volumeMounts:
+          - name: tmp-files
+            mountPath: /tmp/files
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          successThreshold: 1
+        # non-secret env vars
+        # defined in config_map.yaml
+        resources:
+          requests:
+            cpu: 10m
+            memory: 128Mi
+        envFrom:
+          - configMapRef:
+              name: fb-user-filestore-api-env-{{ .Values.environmentName }}
+        env:
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
+                key: secret_key_base
+          - name: KEY_ENCRYPTION_IV
+            valueFrom:
+              secretKeyRef:
+                name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
+                key: key_encryption_iv
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: s3-formbuilder-user-filestore-{{ .Values.environmentName }}
+                key: access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: s3-formbuilder-user-filestore-{{ .Values.environmentName }}
+                key: secret_access_key
+          - name: AWS_S3_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: s3-formbuilder-user-filestore-{{ .Values.environmentName }}
+                key: bucket_name
+          - name: ENCRYPTION_IV
+            valueFrom:
+              secretKeyRef:
+                name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
+                key: encryption_iv
+          - name: ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
+                key: encryption_key
+          - name: SENTRY_DSN
+            valueFrom:
+              secretKeyRef:
+                name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
+                key: sentry_dsn
+          - name: AWS_S3_EXTERNAL_BUCKET_NAME
+            valueFrom:
+              secretKeyRef:
+                name: json-output-attachments-s3-bucket-{{ .Values.environmentName }}
+                key: bucket_name
+          - name: AWS_S3_EXTERNAL_BUCKET_ARN
+            valueFrom:
+              secretKeyRef:
+                name: json-output-attachments-s3-bucket-{{ .Values.environmentName }}
+                key: bucket_arn
+          - name: AWS_S3_EXTERNAL_BUCKET_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: json-output-attachments-s3-bucket-{{ .Values.environmentName }}
+                key: access_key_id
+          - name: AWS_S3_EXTERNAL_BUCKET_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: json-output-attachments-s3-bucket-{{ .Values.environmentName }}
+                key: secret_access_key
+          - name: METRICS_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
+                key: metrics_access_key
+      volumes:
+        - name: tmp-files
+          emptyDir: {}
