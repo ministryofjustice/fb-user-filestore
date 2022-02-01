@@ -9,15 +9,15 @@ gem 'jwt'
 gem 'mime-types'
 gem 'metrics_adapter', '0.2.0'
 gem 'puma', '~> 5.5'
-gem 'rails', '~> 6.1.4.4'
-gem 'sentry-rails', '~> 4.8.1'
-gem 'sentry-ruby', '~> 4.8.3'
+gem 'rails', '~> 7.0.1'
+gem 'sentry-rails', '~> 5.0.2'
+gem 'sentry-ruby', '~> 5.0.2'
 gem 'tzinfo-data'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
-  gem 'rspec-rails', '~> 5.0'
+  gem 'rspec-rails', '~> 5.1'
 end
 
 group :test do
