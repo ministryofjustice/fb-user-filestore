@@ -11,7 +11,9 @@ jobs:
           RAILS_ENV: test
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker: &remote_docker
+          version: 20.10.11
+          docker_layer_caching: true
       - run:
           name: test
           command: 'make spec'
@@ -20,7 +22,7 @@ jobs:
           only_for_branches: master
           failure_message: ":facepalm:  Failed job $CIRCLE_JOB  :homer-disappear:"
           include_job_number_field: false
-  build_and_deploy_to_test:
+  build_and_push_image:
     working_directory: ~/circle/git/fb-user-filestore
     docker: &ecr_base_image
       - image: $AWS_BUILD_IMAGE_ECR_ACCOUNT_URL
@@ -29,10 +31,7 @@ jobs:
           aws_secret_access_key: $AWS_BUILD_IMAGE_SECRET_ACCESS_KEY
     steps:
       - checkout
-      - setup_remote_docker
-      - add_ssh_keys: &ssh_keys
-          fingerprints:
-            - "71:2d:7e:c6:9c:9f:62:4e:0b:e3:d8:8d:5e:ee:ae:c2"
+      - setup_remote_docker: *remote_docker
       - run: &base_environment_variables
           name: Setup base environment variable
           command: |
@@ -46,22 +45,17 @@ jobs:
           environment:
             ENVIRONMENT_NAME: test
           command: './deploy-scripts/bin/build'
-      - run:
-          name: deploy to test dev
-          environment:
-            APPLICATION_NAME: fb-user-filestore
-            PLATFORM_ENV: test
-            DEPLOYMENT_ENV: dev
-            K8S_NAMESPACE: formbuilder-platform-test-dev
-          command: './deploy-scripts/bin/deploy'
-      - run:
-          name: deploy to test production
-          environment:
-            APPLICATION_NAME: fb-user-filestore
-            PLATFORM_ENV: test
-            DEPLOYMENT_ENV: production
-            K8S_NAMESPACE: formbuilder-platform-test-production
-          command: './deploy-scripts/bin/deploy'
+  deploy_to_test_dev:
+    working_directory: ~/circle/git/fb-user-filestore
+    docker: *ecr_base_image
+    steps:
+      - checkout
+      - setup_remote_docker: *remote_docker
+      - add_ssh_keys: &ssh_keys
+          fingerprints:
+            - "71:2d:7e:c6:9c:9f:62:4e:0b:e3:d8:8d:5e:ee:ae:c2"
+      - run: *base_environment_variables
+      - run: *deploy_scripts
       - run:
           name: deploy to test dev (EKS cluster)
           environment:
@@ -70,6 +64,16 @@ jobs:
             DEPLOYMENT_ENV: dev
             K8S_NAMESPACE: formbuilder-platform-test-dev
           command: './deploy-scripts/bin/deploy-eks'
+      - slack/status: *slack_status
+  deploy_to_test_production:
+    working_directory: ~/circle/git/fb-user-filestore
+    docker: *ecr_base_image
+    steps:
+      - checkout
+      - setup_remote_docker: *remote_docker
+      - add_ssh_keys: *ssh_keys
+      - run: *base_environment_variables
+      - run: *deploy_scripts
       - run:
           name: deploy to test production (EKS cluster)
           environment:
@@ -79,36 +83,15 @@ jobs:
             K8S_NAMESPACE: formbuilder-platform-test-production
           command: './deploy-scripts/bin/deploy-eks'
       - slack/status: *slack_status
-  build_and_deploy_to_live:
+  deploy_to_live_dev:
     working_directory: ~/circle/git/fb-user-filestore
     docker: *ecr_base_image
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker: *remote_docker
       - add_ssh_keys: *ssh_keys
       - run: *base_environment_variables
       - run: *deploy_scripts
-      - run:
-          name: build and push docker images
-          environment:
-            ENVIRONMENT_NAME: live
-          command: './deploy-scripts/bin/build'
-      - run:
-          name: deploy to live dev
-          environment:
-            APPLICATION_NAME: fb-user-filestore
-            PLATFORM_ENV: live
-            DEPLOYMENT_ENV: dev
-            K8S_NAMESPACE: formbuilder-platform-live-dev
-          command: './deploy-scripts/bin/deploy'
-      - run:
-          name: deploy to live production
-          environment:
-            APPLICATION_NAME: fb-user-filestore
-            PLATFORM_ENV: live
-            DEPLOYMENT_ENV: production
-            K8S_NAMESPACE: formbuilder-platform-live-production
-          command: './deploy-scripts/bin/deploy'
       - run:
           name: deploy to live dev (eks)
           environment:
@@ -117,6 +100,20 @@ jobs:
             DEPLOYMENT_ENV: dev
             K8S_NAMESPACE: formbuilder-platform-live-dev
           command: './deploy-scripts/bin/deploy-eks'
+      - slack/status:
+          only_for_branches: master
+          success_message: ":rocket:  Successfully deployed to Live Dev  :guitar:"
+          failure_message: ":alert:  Failed to deploy to Live Dev  :try_not_to_cry:"
+          include_job_number_field: false
+  deploy_to_live_production:
+    working_directory: ~/circle/git/fb-user-filestore
+    docker: *ecr_base_image
+    steps:
+      - checkout
+      - setup_remote_docker: *remote_docker
+      - add_ssh_keys: *ssh_keys
+      - run: *base_environment_variables
+      - run: *deploy_scripts
       - run:
           name: deploy to live production (eks)
           environment:
@@ -127,14 +124,14 @@ jobs:
           command: './deploy-scripts/bin/deploy-eks'
       - slack/status:
           only_for_branches: master
-          success_message: ":rocket:  Successfully deployed to Live  :guitar:"
-          failure_message: ":alert:  Failed to deploy to Live  :try_not_to_cry:"
+          success_message: ":rocket:  Successfully deployed to Live Production  :guitar:"
+          failure_message: ":alert:  Failed to deploy to Live Production  :try_not_to_cry:"
           include_job_number_field: false
   acceptance_tests:
     docker: *ecr_base_image
     resource_class: large
     steps:
-      - setup_remote_docker
+      - setup_remote_docker: *remote_docker
       - run: *deploy_scripts
       - run:
           name: Run acceptance tests
@@ -143,7 +140,7 @@ jobs:
   smoke_tests:
     docker: *ecr_base_image
     steps:
-      - setup_remote_docker
+      - setup_remote_docker: *remote_docker
       - run: *deploy_scripts
       - run:
           name: Run smoke tests
@@ -155,21 +152,32 @@ workflows:
   test_and_build:
     jobs:
       - test
-      - build_and_deploy_to_test:
+      - build_and_push_image:
           requires:
             - test
           filters:
             branches:
               only: master
+      - deploy_to_test_dev:
+          requires:
+            - build_and_push_image
+      - deploy_to_test_production:
+          requires:
+            - build_and_push_image
       - acceptance_tests:
           requires:
-            - build_and_deploy_to_test
+            - deploy_to_test_dev
+            - deploy_to_test_production
           filters:
             branches:
               only: master
-      - build_and_deploy_to_live:
+      - deploy_to_live_dev:
+          requires:
+            - acceptance_tests
+      - deploy_to_live_production:
           requires:
             - acceptance_tests
       - smoke_tests:
           requires:
-            - build_and_deploy_to_live
+            - deploy_to_live_dev
+            - deploy_to_live_production
