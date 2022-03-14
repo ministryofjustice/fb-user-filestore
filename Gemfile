@@ -10,8 +10,8 @@ gem 'mime-types'
 gem 'metrics_adapter', '0.2.0'
 gem 'puma', '~> 5.6'
 gem 'rails', '~> 6.1.4.7', '< 7.0.0.0'
-gem 'sentry-rails', '~> 5.1.1'
-gem 'sentry-ruby', '~> 5.1.1'
+gem 'sentry-rails', '~> 5.2.0'
+gem 'sentry-ruby', '~> 5.2.0'
 gem 'tzinfo-data'
 
 group :development, :test do
