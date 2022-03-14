@@ -209,13 +209,13 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.3)
-    sentry-rails (5.1.1)
+    sentry-rails (5.2.0)
       railties (>= 5.0)
-      sentry-ruby-core (~> 5.1.1)
-    sentry-ruby (5.1.1)
+      sentry-ruby-core (~> 5.2.0)
+    sentry-ruby (5.2.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      sentry-ruby-core (= 5.1.1)
-    sentry-ruby-core (5.1.1)
+      sentry-ruby-core (= 5.2.0)
+    sentry-ruby-core (5.2.0)
       concurrent-ruby
     shellany (0.0.1)
     sprockets (4.0.3)
@@ -251,8 +251,8 @@ DEPENDENCIES
   puma (~> 5.6)
   rails (~> 6.1.4.7, < 7.0.0.0)
   rspec-rails (~> 5.1)
-  sentry-rails (~> 5.1.1)
-  sentry-ruby (~> 5.1.1)
+  sentry-rails (~> 5.2.0)
+  sentry-ruby (~> 5.2.0)
   timecop
   tzinfo-data
 
