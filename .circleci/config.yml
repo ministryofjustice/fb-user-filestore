@@ -35,7 +35,7 @@ jobs:
           name: Setup base environment variable
           command: |
             echo "export BUILD_SHA=$CIRCLE_SHA1" >> $BASH_ENV
-            echo "export SSH_FILE_FOR_SECRETS=~/.ssh/id_rsa_712d7ec69c9f624e0be3d88d5eeeaec2" >> $BASH_ENV
+            echo "export SSH_FILE_FOR_SECRETS=~/.ssh/id_rsa_aae95fb57ad8bdffe29e9f3a93523912" >> $BASH_ENV
       - run: &deploy_scripts
           name: cloning deploy scripts
           command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
@@ -52,7 +52,7 @@ jobs:
       - setup_remote_docker: *remote_docker
       - add_ssh_keys: &ssh_keys
           fingerprints:
-            - "71:2d:7e:c6:9c:9f:62:4e:0b:e3:d8:8d:5e:ee:ae:c2"
+            - "aa:e9:5f:b5:7a:d8:bd:ff:e2:9e:9f:3a:93:52:39:12"
       - run: *base_environment_variables
       - run: *deploy_scripts
       - run:
@@ -152,18 +152,24 @@ workflows:
     jobs:
       - test
       - build_and_push_image:
+          context: &moj-forms-context
+            - moj-forms
+            - moj-forms-platform-apps
           requires:
             - test
           filters:
             branches:
               only: master
       - deploy_to_test_dev:
+          context: *moj-forms-context
           requires:
             - build_and_push_image
       - deploy_to_test_production:
+          context: *moj-forms-context
           requires:
             - build_and_push_image
       - acceptance_tests:
+          context: *moj-forms-context
           requires:
             - deploy_to_test_dev
             - deploy_to_test_production
@@ -171,12 +177,15 @@ workflows:
             branches:
               only: master
       - deploy_to_live_dev:
+          context: *moj-forms-context
           requires:
             - acceptance_tests
       - deploy_to_live_production:
+          context: *moj-forms-context
           requires:
             - acceptance_tests
       - smoke_tests:
+          context: *moj-forms-context
           requires:
             - deploy_to_live_dev
             - deploy_to_live_production
