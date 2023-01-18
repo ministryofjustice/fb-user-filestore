@@ -8,7 +8,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jwt'
 gem 'mime-types'
 gem 'puma', '~> 6.0'
-gem 'rails', '~> 6.1.7', '< 7.0.0.0'
+gem 'rails', '~> 7.0.4'
 gem 'sentry-rails', '~> 5.7.0'
 gem 'sentry-ruby', '~> 5.7.0'
 gem 'tzinfo-data'
