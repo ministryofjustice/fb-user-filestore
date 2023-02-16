@@ -7,7 +7,7 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jwt'
 gem 'mime-types'
-gem 'puma', '~> 6.0'
+gem 'puma', '~> 6.1'
 gem 'rails', '~> 6.1.7', '< 7.0.0.0'
 gem 'sentry-rails', '~> 5.8.0'
 gem 'sentry-ruby', '~> 5.8.0'
