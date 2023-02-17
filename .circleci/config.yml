@@ -159,9 +159,7 @@ workflows:
             - test
           filters:
             branches:
-              only: 
-                - master
-                - test-upload-logs
+              only: master
       - deploy_to_test_dev:
           context: *moj-forms-context
           requires:
@@ -178,16 +176,16 @@ workflows:
           filters:
             branches:
               only: master
-      # - deploy_to_live_dev:
-      #     context: *moj-forms-context
-      #     requires:
-      #       - acceptance_tests
-      # - deploy_to_live_production:
-      #     context: *moj-forms-context
-      #     requires:
-      #       - acceptance_tests
-      # - smoke_tests:
-      #     context: *moj-forms-context
-      #     requires:
-      #       - deploy_to_live_dev
-      #       - deploy_to_live_production
+      - deploy_to_live_dev:
+          context: *moj-forms-context
+          requires:
+            - acceptance_tests
+      - deploy_to_live_production:
+          context: *moj-forms-context
+          requires:
+            - acceptance_tests
+      - smoke_tests:
+          context: *moj-forms-context
+          requires:
+            - deploy_to_live_dev
+            - deploy_to_live_production

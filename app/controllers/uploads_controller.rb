@@ -32,6 +32,7 @@ class UploadsController < ApplicationController
     end
     Rails.logger.info('Virus check finished. Checking if file already exists')
     if @file_manager.file_already_exists?
+      Rails.logger.info('File exists, returning')
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
         size: @file_manager.file_size,
