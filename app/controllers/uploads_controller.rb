@@ -16,9 +16,9 @@ class UploadsController < ApplicationController
         days_to_live: params[:policy][:expires]
       }
     )
-
+    Rails.logger.info('Created file manager, saving to disk...')
     @file_manager.save_to_disk
-
+    Rails.logger.info('Saved file to disk')
     if @file_manager.file_too_large?
       return error_large_file(@file_manager.file_size)
     end
@@ -26,11 +26,11 @@ class UploadsController < ApplicationController
     unless @file_manager.type_permitted?
       return error_unsupported_file_type(@file_manager.mime_type)
     end
-
+    Rails.logger.info('Virus check starting....')
     if @file_manager.has_virus?
       return error_virus_error
     end
-
+    Rails.logger.info('Virus check finished. Checking if file already exists')
     if @file_manager.file_already_exists?
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
@@ -42,8 +42,9 @@ class UploadsController < ApplicationController
       render json: hash, status: :ok
     else
       # async?
+      Rails.logger.info('Uploading file....')
       @file_manager.upload
-
+      Rails.logger.info('Upload to remote storage complete')
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
         size: @file_manager.file_size,
