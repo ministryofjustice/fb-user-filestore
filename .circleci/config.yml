@@ -161,7 +161,8 @@ workflows:
             - test
           filters:
             branches:
-              only: master
+              only: 
+                - master
       - deploy_to_test_dev:
           context: *moj-forms-context
           requires:
