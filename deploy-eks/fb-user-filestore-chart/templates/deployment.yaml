@@ -22,7 +22,7 @@ spec:
         fb-service-token-cache-access: "true"
         tier: "frontend"
     spec:
-      serviceAccountName: "formbuilder-user-filestore-{{ .Values.environmentName }}"
+      serviceAccountName: "user-filestore-irsa-{{ .Values.environmentName }}"
       containers:
       - name: "fb-user-filestore-api-{{ .Values.environmentName }}"
         image: "754256621582.dkr.ecr.eu-west-2.amazonaws.com/formbuilder/fb-user-filestore-api:{{ .Values.circleSha1 }}"
