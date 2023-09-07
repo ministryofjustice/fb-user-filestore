@@ -10,8 +10,8 @@ gem 'mime-types'
 gem 'puma', '~> 6.3'
 gem 'rails', '~> 7.0.6'
 gem 'rexml'
-gem 'sentry-rails', '~> 5.10.0'
-gem 'sentry-ruby', '~> 5.10.0'
+gem 'sentry-rails', '~> 5.11.0'
+gem 'sentry-ruby', '~> 5.11.0'
 gem 'tzinfo-data'
 
 group :development, :test do
