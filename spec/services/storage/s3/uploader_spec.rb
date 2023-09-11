@@ -65,37 +65,4 @@ RSpec.describe Storage::S3::Uploader do
       end
     end
   end
-
-  # context 'when different S3 credentials are required' do
-  #   let(:bucket) { ENV['AWS_S3_EXTERNAL_BUCKET_NAME'] }
-
-  #   context 'with default credentials' do
-  #     let(:subject) { described_class.new(key: key, bucket: bucket) }
-  #     let(:expected_config) do
-  #       {
-  #         stub_responses: true
-  #       }
-  #     end
-
-  #     it 'should create the S3 client with the default credentials' do
-  #       expect(Aws::S3::Client).to receive(:new)
-  #       # expect(Aws::S3::Client).to receive(:new).with(expected_config).and_call_original
-  #       subject.upload(file_data: "abc")
-  #     end
-  #   end
-
-    # maybe skip this now as we let the SDK use the service account to connect to either bucket at will
-    # context 'with alternative credentials' do
-    #   let(:subject) do
-    #     described_class.new(key: key, bucket: bucket)
-    #   end
-    #   # let(:external_config) { Rails.configuration.x.s3_external_bucket_config }
-
-    #   it 'should create the S3 client with the injected credentials' do
-    #     # expect(Aws::S3::Client).to receive(:new).with(external_config).and_call_original
-    #     expect(Aws::S3::Client).to receive(:new)
-    #     subject.upload(file_data: "abc")
-    #   end
-    # end
-  # end
 end

@@ -36,10 +36,6 @@ class PresignedS3UrlsController < ApplicationController
     )
   end
 
-  # def external_bucket_s3_config
-  #   Rails.configuration.x.s3_external_bucket_config
-  # end
-
   def key
     @key ||= KeyForFile.new(
       user_id: params[:user_id],
