@@ -13,6 +13,6 @@ class HealthController < ActionController::API
   private
 
   def internal_bucket_client
-    Aws::S3::Client.new(Rails.configuration.x.s3_internal_bucket_config)
+    Aws::S3::Client.new
   end
 end

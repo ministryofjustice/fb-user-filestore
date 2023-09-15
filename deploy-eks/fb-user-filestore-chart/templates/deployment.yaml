@@ -22,7 +22,7 @@ spec:
         fb-service-token-cache-access: "true"
         tier: "frontend"
     spec:
-      serviceAccountName: "formbuilder-user-filestore-{{ .Values.environmentName }}"
+      serviceAccountName: "user-filestore-irsa-{{ .Values.environmentName }}"
       containers:
       - name: "fb-user-filestore-api-{{ .Values.environmentName }}"
         image: "754256621582.dkr.ecr.eu-west-2.amazonaws.com/formbuilder/fb-user-filestore-api:{{ .Values.circleSha1 }}"
@@ -70,16 +70,6 @@ spec:
               secretKeyRef:
                 name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
                 key: key_encryption_iv
-          - name: AWS_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: s3-formbuilder-user-filestore-{{ .Values.environmentName }}
-                key: access_key_id
-          - name: AWS_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: s3-formbuilder-user-filestore-{{ .Values.environmentName }}
-                key: secret_access_key
           - name: AWS_S3_BUCKET_NAME
             valueFrom:
               secretKeyRef:
@@ -110,16 +100,6 @@ spec:
               secretKeyRef:
                 name: json-output-attachments-s3-bucket-{{ .Values.environmentName }}
                 key: bucket_arn
-          - name: AWS_S3_EXTERNAL_BUCKET_ACCESS_KEY_ID
-            valueFrom:
-              secretKeyRef:
-                name: json-output-attachments-s3-bucket-{{ .Values.environmentName }}
-                key: access_key_id
-          - name: AWS_S3_EXTERNAL_BUCKET_SECRET_ACCESS_KEY
-            valueFrom:
-              secretKeyRef:
-                name: json-output-attachments-s3-bucket-{{ .Values.environmentName }}
-                key: secret_access_key
       volumes:
         - name: tmp-files
           emptyDir: {}

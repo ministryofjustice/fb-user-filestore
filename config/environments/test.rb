@@ -47,16 +47,6 @@ Rails.application.configure do
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
-  config.x.s3_internal_bucket_config = {
-    access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
-    secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'),
-    stub_responses: true
-  }
-  config.x.s3_external_bucket_config = {
-    access_key_id: ENV.fetch('AWS_S3_EXTERNAL_BUCKET_ACCESS_KEY_ID'),
-    secret_access_key: ENV.fetch('AWS_S3_EXTERNAL_BUCKET_SECRET_ACCESS_KEY'),
-    stub_responses: true
-  }
 
   config.hosts.clear
 end
