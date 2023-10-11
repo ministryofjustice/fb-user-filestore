@@ -121,7 +121,7 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.21.3)
+    loofah (2.21.4)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     lumberjack (1.2.8)
@@ -219,10 +219,10 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.0)
-    sentry-rails (5.11.0)
+    sentry-rails (5.12.0)
       railties (>= 5.0)
-      sentry-ruby (~> 5.11.0)
-    sentry-ruby (5.11.0)
+      sentry-ruby (~> 5.12.0)
+    sentry-ruby (5.12.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
     shellany (0.0.1)
     thor (1.2.2)
@@ -235,7 +235,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
 
 PLATFORMS
   ruby
@@ -252,8 +252,8 @@ DEPENDENCIES
   rails (~> 7.0.6)
   rexml
   rspec-rails (~> 6.0)
-  sentry-rails (~> 5.11.0)
-  sentry-ruby (~> 5.11.0)
+  sentry-rails (~> 5.12.0)
+  sentry-ruby (~> 5.12.0)
   timecop
   tzinfo-data
 
