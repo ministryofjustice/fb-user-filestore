@@ -7,11 +7,11 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jwt'
 gem 'mime-types'
-gem 'puma', '~> 6.3'
+gem 'puma', '~> 6.4'
 gem 'rails', '~> 7.0.6'
 gem 'rexml'
-gem 'sentry-rails', '~> 5.11.0'
-gem 'sentry-ruby', '~> 5.11.0'
+gem 'sentry-rails', '~> 5.12.0'
+gem 'sentry-ruby', '~> 5.12.0'
 gem 'tzinfo-data'
 
 group :development, :test do
