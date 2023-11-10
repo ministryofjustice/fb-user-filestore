@@ -22,10 +22,6 @@ group :development, :test do
   gem 'simplecov-console'
 end
 
-group :test do
-  gem 'timecop'
-end
-
 group :development do
    gem 'guard-rspec', require: false
 end

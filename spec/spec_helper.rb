@@ -1,4 +1,3 @@
-require 'timecop'
 require 'simplecov'
 require 'simplecov-console'
 
