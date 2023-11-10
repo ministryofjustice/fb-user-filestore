@@ -4,6 +4,7 @@ class HealthController < ActionController::API
     render plain: 'healthy'
   end
 
+  # :nocov:
   def readiness
     if internal_bucket_client.head_bucket({ bucket: ENV.fetch('AWS_S3_BUCKET_NAME') })
       render plain: 'ready'
@@ -15,4 +16,5 @@ class HealthController < ActionController::API
   def internal_bucket_client
     Aws::S3::Client.new
   end
+  # :nocov:
 end

@@ -17,7 +17,9 @@ gem 'tzinfo-data'
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
-  gem 'rspec-rails', '~> 6.0'
+  gem 'rspec-rails'
+  gem 'simplecov'
+  gem 'simplecov-console'
 end
 
 group :test do

@@ -6,7 +6,7 @@ orbs:
 jobs:
   login-to-aws:
     docker: &docker_image
-      - image: 'cimg/ruby:3.1.3-node'
+      - image: 'cimg/ruby:3.2.2-node'
     steps:
       - checkout
       - aws-cli/setup:
@@ -26,7 +26,7 @@ jobs:
   test:
     working_directory: ~/circle
     docker:
-      - image: cimg/ruby:3.1.3
+      - image: cimg/ruby:3.2.2
         environment:
           RAILS_ENV: test
     steps:
@@ -63,7 +63,7 @@ jobs:
             echo "export SSH_FILE_FOR_SECRETS=~/.ssh/id_rsa_aae95fb57ad8bdffe29e9f3a93523912" >> $BASH_ENV
       - run: &deploy_scripts
           name: cloning deploy scripts
-          command: 'git clone --branch temporary-ecr-creds git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
+          command: 'git clone git@github.com:ministryofjustice/fb-deploy.git deploy-scripts'
       - run:
           name: build and push docker images
           environment:
