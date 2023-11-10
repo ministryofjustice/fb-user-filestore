@@ -221,10 +221,10 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
-    sentry-rails (5.12.0)
+    sentry-rails (5.13.0)
       railties (>= 5.0)
-      sentry-ruby (~> 5.12.0)
-    sentry-ruby (5.12.0)
+      sentry-ruby (~> 5.13.0)
+    sentry-ruby (5.13.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
     shellany (0.0.1)
     simplecov (0.22.0)
@@ -267,8 +267,8 @@ DEPENDENCIES
   rails (~> 7.0.6)
   rexml
   rspec-rails
-  sentry-rails (~> 5.12.0)
-  sentry-ruby (~> 5.12.0)
+  sentry-rails (~> 5.13)
+  sentry-ruby (~> 5.13)
   simplecov
   simplecov-console
   timecop
