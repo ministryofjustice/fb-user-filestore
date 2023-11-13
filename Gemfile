@@ -10,18 +10,16 @@ gem 'mime-types'
 gem 'puma', '~> 6.4'
 gem 'rails', '~> 7.0.6'
 gem 'rexml'
-gem 'sentry-rails', '~> 5.12.0'
-gem 'sentry-ruby', '~> 5.12.0'
+gem 'sentry-rails', '~> 5.13'
+gem 'sentry-ruby', '~> 5.13'
 gem 'tzinfo-data'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'dotenv-rails'
-  gem 'rspec-rails', '~> 6.0'
-end
-
-group :test do
-  gem 'timecop'
+  gem 'rspec-rails'
+  gem 'simplecov'
+  gem 'simplecov-console'
 end
 
 group :development do

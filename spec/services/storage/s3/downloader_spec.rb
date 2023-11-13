@@ -29,4 +29,11 @@ RSpec.describe Storage::S3::Downloader do
       end
     end
   end
+
+  describe '#purge_from_source!' do
+    it 'deletes file from s3' do
+      expect(download_client).to receive(:delete_object).with(bucket:, key:)
+      subject.purge_from_source!
+    end
+  end
 end

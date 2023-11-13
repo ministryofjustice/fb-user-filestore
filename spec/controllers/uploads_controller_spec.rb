@@ -31,7 +31,7 @@ RSpec.describe UploadsController, type: :controller do
   end
 
   describe 'POST #create' do
-    context 'when there are missing paramters' do
+    context 'when there are missing or invalid parameters' do
       before :each do
         disable_malware_scanner!
       end
@@ -52,6 +52,15 @@ RSpec.describe UploadsController, type: :controller do
           json_params = json
           post :create, params: url_params.merge(json_params)
           expect(response).to be_bad_request
+        end
+      end
+
+      context 'invalid user_id' do
+        it 'returns error' do
+          url_params = { service_slug: 'service-slug', user_id: '12345' }
+          json_params = json
+          post :create, params: url_params.merge(json_params)
+          expect(response).to be_server_error
         end
       end
 

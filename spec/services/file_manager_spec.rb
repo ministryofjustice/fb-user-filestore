@@ -24,9 +24,9 @@ RSpec.describe FileManager do
     let(:filename) { subject.send(:random_filename) }
 
     it 'expect file to be saved to disk' do
-      expect(File.exists?("tmp/files/quarantine/#{filename}")).to be_falsey
+      expect(File.exist?("tmp/files/quarantine/#{filename}")).to be_falsey
       subject.save_to_disk
-      expect(File.exists?("tmp/files/quarantine/#{filename}")).to be_truthy
+      expect(File.exist?("tmp/files/quarantine/#{filename}")).to be_truthy
     end
   end
 

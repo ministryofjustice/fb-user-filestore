@@ -16,23 +16,29 @@ class UploadsController < ApplicationController
         days_to_live: params[:policy][:expires]
       }
     )
-    Rails.logger.info('Created file manager, saving to disk...')
+
+    log('Created file manager, saving to disk...')
     @file_manager.save_to_disk
-    Rails.logger.info('Saved file to disk')
+    log('Saved file to disk')
+
     if @file_manager.file_too_large?
+      log('File is too large')
       return error_large_file(@file_manager.file_size)
     end
 
     unless @file_manager.type_permitted?
+      log('File type is not permitted')
       return error_unsupported_file_type(@file_manager.mime_type)
     end
-    Rails.logger.info('Virus check starting....')
+
+    log('Virus check starting...')
     if @file_manager.has_virus?
       return error_virus_error
     end
-    Rails.logger.info('Virus check finished. Checking if file already exists')
+    log('Virus check finished. Checking if file already exists')
+
     if @file_manager.file_already_exists?
-      Rails.logger.info('File exists, returning')
+      log('File exists, returning')
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
         size: @file_manager.file_size,
@@ -43,9 +49,9 @@ class UploadsController < ApplicationController
       render json: hash, status: :ok
     else
       # async?
-      Rails.logger.info('Uploading file....')
+      log('Uploading file...')
       @file_manager.upload
-      Rails.logger.info('Upload to remote storage complete')
+      log('Upload to remote storage complete, returning')
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
         size: @file_manager.file_size,
@@ -65,6 +71,8 @@ class UploadsController < ApplicationController
   private
 
   def check_upload_params
+    log('Checking upload params...')
+
     if params[:file].blank?
       return render json: { code: 400, name: 'invalid.file-missing' }, status: 400
     end
@@ -123,6 +131,10 @@ class UploadsController < ApplicationController
   def error_virus_error
     render json: { code: 400,
                    name: 'invalid.virus' }, status: 400
+  end
+
+  def log(str)
+    Rails.logger.info("[#{self.class.name}] #{str}")
   end
 
   def bucket

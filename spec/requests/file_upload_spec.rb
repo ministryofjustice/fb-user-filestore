@@ -40,7 +40,7 @@ RSpec.describe 'FileUpload API', type: :request do
       let(:now) { Time.now.utc }
 
       around :each do |example|
-        Timecop.freeze(now) do
+        travel_to(now) do
           example.run
         end
       end
@@ -188,7 +188,7 @@ RSpec.describe 'FileUpload API', type: :request do
       let(:now) { Time.now.utc }
 
       around :each do |example|
-        Timecop.freeze(now) do
+        travel_to(now) do
           example.run
         end
       end

@@ -50,6 +50,13 @@ RSpec.describe Storage::S3::Uploader do
       end
     end
 
+    describe '#purge_from_s3!' do
+      it 'deletes file from s3' do
+        expect(s3).to receive(:delete_object).with(bucket:, key:)
+        subject.purge_from_s3!
+      end
+    end
+
     describe '#created_at' do
       let(:now) { Time.now.utc }
 
