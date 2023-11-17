@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include Concerns::SetCurrentRequestDetails
   include Concerns::ErrorHandling
 
   before_action :enforce_json_only
