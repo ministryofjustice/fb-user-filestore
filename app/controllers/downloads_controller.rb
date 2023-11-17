@@ -10,7 +10,8 @@ class DownloadsController < ApplicationController
     else
       render json: { code: 404, name: 'not-found' }, status: 404
     end
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.warn("Download error #{e}")
     return error_download_server_error
   end
 
@@ -18,6 +19,7 @@ class DownloadsController < ApplicationController
 
   def check_download_params
     if request.headers['x-encrypted-user-id-and-token'].blank?
+      Rails.logger.warn('x-encrypted-user-id-and-token header is missing')
       return render json: { code: 403, name: 'forbidden.user-id-token-missing' }, status: 403
     end
 
