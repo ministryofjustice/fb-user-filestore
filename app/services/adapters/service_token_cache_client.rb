@@ -16,7 +16,7 @@ module Adapters
 
     def public_key_for(service_slug)
       url = public_key_uri(service_slug)
-      response = Net::HTTP.get_response(url)
+      response = Net::HTTP.get_response(url, headers)
 
       return unless response.code.to_i == 200
 
@@ -26,9 +26,19 @@ module Adapters
 
     private
 
+    def headers
+      {
+        'User-Agent' => 'UserFilestore',
+        'X-Request-Id' => Current.request_id
+      }.freeze
+    end
+
+    # TODO: this method seems to not be in use anymore
+    # :nocov:
     def service_token_uri(service_slug)
       URI.join(@root_url, '/service/', service_slug)
     end
+    # :nocov:
 
     def public_key_uri(service_slug)
       URI.join(root_url, '/service/v2/', service_slug)

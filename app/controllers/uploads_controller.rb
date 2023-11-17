@@ -63,6 +63,7 @@ class UploadsController < ApplicationController
     end
   rescue StandardError => e
     Sentry.capture_exception(e)
+    log("Unexpected error: #{e}")
     return error_upload_server_error
   ensure
     @file_manager.delete_file if @file_manager

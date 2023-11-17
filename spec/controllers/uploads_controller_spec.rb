@@ -31,6 +31,13 @@ RSpec.describe UploadsController, type: :controller do
   end
 
   describe 'POST #create' do
+    context 'stores the current request details' do
+      it 'stores the request_id' do
+        expect(Current).to receive(:request_id=)
+        post :create, params: { service_slug:, user_id: }
+      end
+    end
+
     context 'when there are missing or invalid parameters' do
       before :each do
         disable_malware_scanner!

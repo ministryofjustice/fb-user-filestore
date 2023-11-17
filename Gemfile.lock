@@ -68,7 +68,7 @@ GEM
       tzinfo (~> 2.0)
     ansi (1.5.0)
     aws-eventstream (1.2.0)
-    aws-partitions (1.848.0)
+    aws-partitions (1.852.0)
     aws-sdk-core (3.186.0)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.651.0)
@@ -123,10 +123,10 @@ GEM
     listen (3.8.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    loofah (2.21.4)
+    loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    lumberjack (1.2.9)
+    lumberjack (1.2.10)
     mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
@@ -142,7 +142,7 @@ GEM
     minitest (5.20.0)
     msgpack (1.7.2)
     nenv (0.3.0)
-    net-imap (0.4.4)
+    net-imap (0.4.5)
       date
       net-protocol
     net-pop (0.1.2)
@@ -151,7 +151,7 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
-    nio4r (2.5.9)
+    nio4r (2.6.0)
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)

@@ -27,6 +27,13 @@ RSpec.describe DownloadsController, type: :controller do
       request.headers.merge!(headers)
     end
 
+    context 'stores the current request details' do
+      it 'stores the request_id' do
+        expect(Current).to receive(:request_id=)
+        get :show, params: { service_slug:, user_id:, fingerprint_with_prefix: '28d-fingerprint' }
+      end
+    end
+
     context 'sad paths' do
       context 'missing payload' do
         it 'returns error' do
