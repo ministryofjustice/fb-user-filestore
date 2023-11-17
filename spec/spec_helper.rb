@@ -1,7 +1,7 @@
 require 'simplecov'
 require 'simplecov-console'
 
-SimpleCov.minimum_coverage 98
+SimpleCov.minimum_coverage 100
 SimpleCov.start do
   add_filter 'config/'
   add_filter 'spec/'

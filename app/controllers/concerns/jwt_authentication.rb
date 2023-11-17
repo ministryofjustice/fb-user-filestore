@@ -62,10 +62,12 @@ module Concerns
     # TODO: this method seems to not be in use anymore
     # Legacy FB forms are using v2 token cache too
     # Confirm to be sure and cleanup code/tests
+    # :nocov:
     def service_token(service_slug)
       service = ServiceTokenService.new(service_slug: service_slug)
       service.get
     end
+    # :nocov:
 
     def public_key(service_slug)
       service = ServiceTokenService.new(service_slug: service_slug)
