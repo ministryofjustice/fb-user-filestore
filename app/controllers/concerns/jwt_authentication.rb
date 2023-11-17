@@ -20,7 +20,7 @@ module Concerns
     private
 
     def verify_token!
-      unless request.headers['x-access-token-v2']
+      unless access_token
         raise Exceptions::TokenNotPresentError
       end
 
@@ -28,35 +28,30 @@ module Concerns
     end
 
     def verify
-      token = request.headers['x-access-token-v2']
+      hmac_secret = public_key(params[:service_slug])
+      @jwt_payload, _header = JWT.decode(
+        access_token,
+        hmac_secret,
+        true,
+        {
+          exp_leeway: leeway,
+          algorithm: 'RS256'
+        }
+      )
 
-      begin
-        hmac_secret = public_key(params[:service_slug])
-        @jwt_payload, _header = JWT.decode(
-          token,
-          hmac_secret,
-          true,
-          {
-            exp_leeway: leeway,
-            algorithm: 'RS256'
-          }
-        )
+      # NOTE: verify_iat used to be in the JWT gem, but was removed in v2.2
+      # so we have to do it manually
+      iat_skew = @jwt_payload['iat'].to_i - Time.current.to_i
 
-        Rails.logger.debug("  JWT payload: #{@jwt_payload}")
-
-        # NOTE: verify_iat used to be in the JWT gem, but was removed in v2.2
-        # so we have to do it manually
-        iat_skew = @jwt_payload['iat'].to_i - Time.current.to_i
-        if iat_skew.abs > leeway
-          Rails.logger.debug("iat skew is #{iat_skew}, max is #{leeway} - INVALID")
-          raise Exceptions::TokenNotValidError.new
-        end
-
-        Rails.logger.debug "token is valid"
-      rescue StandardError => e
-        Rails.logger.debug("Couldn't parse that token - error #{e}")
-        raise Exceptions::TokenNotValidError.new
+      if iat_skew.abs > leeway
+        Rails.logger.warn("iat skew is #{iat_skew}, max is #{leeway} - INVALID")
+        raise Exceptions::TokenNotValidError
       end
+
+      Rails.logger.debug "token is valid"
+    rescue StandardError => e
+      Rails.logger.warn("Couldn't parse that token - error #{e}")
+      raise Exceptions::TokenNotValidError
     end
 
     # TODO: this method seems to not be in use anymore
@@ -82,6 +77,10 @@ module Concerns
           request.headers['x-jwt-skew-override']
         end
       end.to_i
+    end
+
+    def access_token
+      request.headers['x-access-token-v2']
     end
   end
 end
