@@ -50,19 +50,6 @@ class DownloadsController < ApplicationController
                             cipher_key: Digest::MD5.hexdigest(request.headers['x-encrypted-user-id-and-token'])).call
   end
 
-  def error_large_file(size)
-    render json: { code: 400,
-                   name: 'invalid.too-large',
-                   max_size: params[:policy][:max_size],
-                   size: size }, status: 400
-  end
-
-  def error_unsupported_file_type(type)
-    render json: { code: 400,
-                   name: 'invalid type',
-                   type: type }, status: 400
-  end
-
   def error_download_server_error
     render json: { code: 503,
                    name: 'unavailable.file-retrieval-failed' }, status: 503
