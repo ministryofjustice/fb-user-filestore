@@ -47,7 +47,7 @@ module Concerns
         # NOTE: verify_iat used to be in the JWT gem, but was removed in v2.2
         # so we have to do it manually
         iat_skew = @jwt_payload['iat'].to_i - Time.current.to_i
-        if iat_skew.abs > leeway.to_i
+        if iat_skew.abs > leeway
           Rails.logger.debug("iat skew is #{iat_skew}, max is #{leeway} - INVALID")
           raise Exceptions::TokenNotValidError.new
         end
@@ -59,6 +59,9 @@ module Concerns
       end
     end
 
+    # TODO: this method seems to not be in use anymore
+    # Legacy FB forms are using v2 token cache too
+    # Confirm to be sure and cleanup code/tests
     def service_token(service_slug)
       service = ServiceTokenService.new(service_slug: service_slug)
       service.get
@@ -76,7 +79,7 @@ module Concerns
         else
           request.headers['x-jwt-skew-override']
         end
-      end
+      end.to_i
     end
   end
 end

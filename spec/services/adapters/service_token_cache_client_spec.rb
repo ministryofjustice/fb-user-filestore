@@ -79,8 +79,23 @@ RSpec.describe Adapters::ServiceTokenCacheClient do
       double('response', body: {token: encoded_public_key}.to_json, code: 200)
     end
 
+    let(:expected_headers) do
+      {
+        'User-Agent' => 'UserFilestore',
+        'X-Request-Id' => '12345',
+      }
+    end
+
+    before do
+      allow(Current).to receive(:request_id).and_return('12345')
+    end
+
     it 'returns public key' do
-      expect(Net::HTTP).to receive(:get_response).with(URI('http://www.example.com/service/v2/my-service')).and_return(mock_response)
+      expect(
+        Net::HTTP
+      ).to receive(:get_response).with(
+        URI('http://www.example.com/service/v2/my-service'), expected_headers
+      ).and_return(mock_response)
 
       subject.public_key_for(service_slug)
     end
