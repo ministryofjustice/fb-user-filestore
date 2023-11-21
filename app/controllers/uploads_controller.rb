@@ -75,31 +75,32 @@ class UploadsController < ApplicationController
     log('Checking upload params...')
 
     if params[:file].blank?
-      return render json: { code: 400, name: 'invalid.file-missing' }, status: 400
+      return render json: { code: 400, name: 'error.file-missing' }, status: 400
     end
 
     if params[:user_id].blank?
-      return render json: { code: 400, name: 'invalid.user-id-missing' }, status: 400
+      return render json: { code: 400, name: 'error.user-id-missing' }, status: 400
     end
 
     unless @jwt_payload['sub'] == params[:user_id]
-      raise Concerns::JWTAuthentication::SubjectMismatchError
+      log('There is a mismatch between the user_id and the jwt sub')
+      return render json: { code: 403, name: 'error.user-id-sub-mismatch' }, status: 403
     end
 
     if params[:encrypted_user_id_and_token].blank?
-      return render json: { code: 403, name: 'forbidden.user-id-token-missing' }, status: 403
+      return render json: { code: 403, name: 'error.user-id-token-missing' }, status: 403
     end
 
     if params[:service_slug].blank?
-      return render json: { code: 400, name: 'invalid.service-slug-missing' }, status: 400
+      return render json: { code: 400, name: 'error.service-slug-missing' }, status: 400
     end
 
     if params[:policy].blank?
-      return render json: { code: 400, name: 'invalid.policy-missing' }, status: 400
+      return render json: { code: 400, name: 'error.policy-missing' }, status: 400
     end
 
     if params[:policy][:max_size].blank?
-      return render json: { code: 400, name: 'invalid.policy-max-size-missing' }, status: 400
+      return render json: { code: 400, name: 'error.policy-max-size-missing' }, status: 400
     end
 
     if params[:policy][:allowed_types].blank?
@@ -126,7 +127,7 @@ class UploadsController < ApplicationController
 
   def error_upload_server_error
     render json: { code: 503,
-                   name: 'unavailable.file-store-failed' }, status: 503
+                   name: 'error.file-store-failed' }, status: 503
   end
 
   def error_virus_error

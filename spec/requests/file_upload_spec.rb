@@ -177,7 +177,7 @@ RSpec.describe 'FileUpload API', type: :request do
 
         body = JSON.parse(response.body)
         expect(body['code']).to eql(503)
-        expect(body['name']).to eql('unavailable.file-store-failed')
+        expect(body['name']).to eql('error.file-store-failed')
       end
     end
 
