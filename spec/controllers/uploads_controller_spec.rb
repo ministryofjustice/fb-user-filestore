@@ -67,7 +67,7 @@ RSpec.describe UploadsController, type: :controller do
           url_params = { service_slug: 'service-slug', user_id: '12345' }
           json_params = json
           post :create, params: url_params.merge(json_params)
-          expect(response).to be_server_error
+          expect(response).to be_forbidden
         end
       end
 
