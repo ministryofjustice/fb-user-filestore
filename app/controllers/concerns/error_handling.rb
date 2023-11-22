@@ -32,7 +32,13 @@ module Concerns
       detail = I18n.t(:detail, scope: [:error_messages, error_code], default: '')
       error[:detail] = detail unless detail.empty?
 
-      render json: { errors: [error] }, status: status
+      # NOTE: upload responses need to conform to a specific format
+      # to be understood by the frontend
+      if is_a?(UploadsController)
+        render json: { code: status, name: "error.#{error_code}" }, status:
+      else
+        render json: { errors: [error] }, status:
+      end
     end
   end
 end
