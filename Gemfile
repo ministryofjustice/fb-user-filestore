@@ -9,7 +9,6 @@ gem 'jwt'
 gem 'mime-types'
 gem 'puma', '~> 6.4'
 gem 'rails', '~> 7.0.6'
-gem 'rexml'
 gem 'sentry-rails', '~> 5.13'
 gem 'sentry-ruby', '~> 5.13'
 gem 'tzinfo-data'
@@ -23,5 +22,5 @@ group :development, :test do
 end
 
 group :development do
-   gem 'guard-rspec', require: false
+  gem 'guard-rspec', require: false
 end
