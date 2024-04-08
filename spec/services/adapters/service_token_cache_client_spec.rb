@@ -23,53 +23,6 @@ RSpec.describe Adapters::ServiceTokenCacheClient do
 
   subject { described_class.new(root_url: 'http://www.example.com') }
 
-  describe '#get' do
-    let(:service_slug) { 'my-service' }
-    let(:response_code) { '200' }
-    let(:mock_response) { double('response', body: '{"token": "token value"}', code: response_code) }
-
-    before do
-      allow(subject).to receive(:service_token_uri).with(service_slug).and_return('http://service/token/url')
-      allow(Net::HTTP).to receive(:get_response).and_return(mock_response)
-    end
-
-    it 'gets the service_token_uri for the given service_slug' do
-      expect(subject).to receive(:service_token_uri).with(service_slug).and_return('http://service/token/url')
-      subject.get(service_slug)
-    end
-
-    it 'makes a GET request to the service_token_uri' do
-      expect(Net::HTTP).to receive(:get_response).with('http://service/token/url').and_return(mock_response)
-      subject.get(service_slug)
-    end
-
-    context 'when the response has code 200' do
-      let(:response_code) { '200' }
-
-      it 'returns the token key from the body' do
-        expect(subject.get(service_slug)).to eq('token value')
-      end
-    end
-
-    context 'when the response code is not 200' do
-      let(:response_code) { '418' }
-
-      it 'returns nil' do
-        expect(subject.get(service_slug)).to be_nil
-      end
-    end
-
-    context 'when an error is raised' do
-      before do
-        allow(JSON).to receive(:parse).and_raise(JSON::ParserError)
-      end
-
-      it 'allows the error to pass out uncaught' do
-        expect{subject.get(service_slug)}.to raise_error(JSON::ParserError)
-      end
-    end
-  end
-
   describe '#public_key_for' do
     let(:service_slug) { 'my-service' }
     let(:encoded_public_key) do

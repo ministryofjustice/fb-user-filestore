@@ -27,7 +27,6 @@ RSpec.describe 'FileUpload API', type: :request do
   before :each do
     disable_malware_scanner!
     allow(ServiceTokenService).to receive(:new).with(service_slug: 'service-slug').and_return(fake_service)
-    allow(fake_service).to receive(:get).and_return('service-token')
     allow(fake_service).to receive(:public_key).and_return(public_key)
     allow(Aws::S3::Client).to receive(:new).and_return(s3)
   end

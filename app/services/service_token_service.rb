@@ -5,10 +5,6 @@ class ServiceTokenService
     @service_slug = service_slug
   end
 
-  def get
-    client.get(service_slug)
-  end
-
   def public_key
     client.public_key_for(service_slug)
   end
