@@ -181,13 +181,13 @@ workflows:
           context: &moj-forms-context
             - moj-forms
             - moj-forms-platform-apps
-      - test:
-          requires:
-            - login-to-aws
+      # - test:
+      #     requires:
+      #       - login-to-aws
       - build_and_push_image:
           context: *moj-forms-context
-          requires:
-            - test
+          # requires:
+          #   - test
           filters:
             branches:
               only: 

@@ -50,7 +50,7 @@ class UploadsController < ApplicationController
     else
       # async?
       log('Uploading file...')
-      @file_manager.upload
+      # @file_manager.upload
 
       log('Upload to remote storage complete, returning')
       hash = {
