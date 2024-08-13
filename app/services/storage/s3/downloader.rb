@@ -11,7 +11,8 @@ module Storage
 
       def exists?
         begin
-          client.head_object(bucket: bucket, key: key)
+          res = client.head_object(bucket: bucket, key: key)
+          Rails.logger.info(res)
           true
         rescue Aws::S3::Errors::NotFound
           false
