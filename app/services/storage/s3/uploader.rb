@@ -9,7 +9,9 @@ module Storage
       end
 
       def upload(file_data:)
-        client.put_object(bucket: bucket, key: key, body: file_data)
+        res = client.put_object(bucket: bucket, key: key, body: file_data)
+        Rails.logger.info(res)
+        res
       end
 
       def exists?
