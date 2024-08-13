@@ -186,8 +186,8 @@ workflows:
       #       - login-to-aws
       - build_and_push_image:
           context: *moj-forms-context
-          # requires:
-          #   - test
+          requires:
+            - login-to-aws
           filters:
             branches:
               only: 
