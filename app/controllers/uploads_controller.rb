@@ -50,9 +50,8 @@ class UploadsController < ApplicationController
     else
       # async?
       log('Uploading file...')
-      res = @file_manager.upload
-      log(res)
-      log(res.body)
+      @file_manager.upload
+
       log('Upload to remote storage complete, returning')
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
