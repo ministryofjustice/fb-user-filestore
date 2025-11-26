@@ -63,4 +63,4 @@ setup: stop build
 	$(DOCKER_COMPOSE) up -d
 
 spec: build
-	$(DOCKER_COMPOSE) run --rm app bundle exec rspec --require spec_helper
+	$(DOCKER_COMPOSE) run --rm api env RAILS_ENV=test bundle exec rspec --require spec_helper
