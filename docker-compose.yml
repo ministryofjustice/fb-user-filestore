@@ -22,7 +22,6 @@ services:
       KEY_ENCRYPTION_IV: 1234567890123456
       ENCRYPTION_IV: 1234567890123451
       ENCRYPTION_KEY: a9c12000de36def805e4c2107bd8e910
-      LOCALSTACK_DOCKER_NAME: ripan
     networks:
       - app-net
 
