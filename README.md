@@ -44,3 +44,16 @@ hash = JSON.parse(response)
 
 File.open('/tmp/out', 'wb') {|f| f.write Base64.strict_decode64(hash['file']) }
 ```
+
+## Troubleshooting
+
+### Error: "The specified bucket does not exist"
+```shell
+user-filestore-api  | [UploadsController] Unexpected error: The specified bucket does not exist
+user-filestore-api  | Completed 503 Service Unavailable in 437ms (Views: 0.3ms | Allocations: 163352)
+```
+### Solution: 
+Execute the following command from `localstack-main` container
+```shell 
+docker exec -it localstack-main /bin/sh  -c "awslocal s3api create-bucket --bucket moj-formbuilder"
+```
