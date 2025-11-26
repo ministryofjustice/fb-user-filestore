@@ -59,5 +59,8 @@ build: stop
 serve: stop build
 	$(DOCKER_COMPOSE) up
 
+setup: stop build
+	$(DOCKER_COMPOSE) up -d
+
 spec: build
 	$(DOCKER_COMPOSE) run --rm app bundle exec rspec --require spec_helper
