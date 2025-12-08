@@ -33,3 +33,4 @@ config/clamd/*.conf
 node_modules
 package-lock.json
 .env.local
+/volume
