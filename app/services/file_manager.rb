@@ -1,5 +1,6 @@
 require 'securerandom'
 require 'digest'
+require 'csv'
 
 class FileManager
   attr_reader :file
@@ -45,7 +46,14 @@ class FileManager
   end
 
   def mime_type
-    @mime_type ||= `file --b --mime-type '#{path_to_file}'`.strip
+    @mime_type ||= begin
+      type = `file --b --mime-type '#{path_to_file}'`.strip
+      if type == 'text/plain' && csv?
+        'text/csv'
+      else
+        type
+      end
+    end
   end
 
   def upload
@@ -119,6 +127,26 @@ class FileManager
 
   def ensure_quarantine_folder_exists
     FileUtils.mkdir_p(quarantine_folder)
+  end
+
+  def csv?
+    contents = File.read(path_to_file)
+    csv_table = CSV.parse(contents, headers: true)
+
+    # Ensure there is at least one row
+    return false if csv_table.empty?
+
+    # Check if every row matches the header length
+    header_size = csv_table.headers.compact.size
+    csv_table.each do |row|
+      return false if row.size != header_size
+    end
+
+    true
+  rescue CSV::MalformedCSVError
+    # If the file is not a valid CSV (e.g., mismatched quotes),
+    # it raises an error and we return false.
+    false
   end
 
   def quarantine_folder
