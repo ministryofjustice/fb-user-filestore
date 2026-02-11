@@ -45,10 +45,14 @@ class FileManager
     MimeChecker.new(mime_type, allowed_types).call
   end
 
+  # linux 'file' command (via libmagic) ignores the filename and extension. It looks only at the bytes inside the file and tries to match known signatures.
+  # So if single-column CSV has plain ASCII text, no commas, no quotes, no consistent delimiter pattern it returns mime-type as `text/plain`
+  # Email server checks the mime-type and converts single-column csv to a text file when sent as an attachment
+  # So we have to explicitly set mime-type as `text/csv` for a single-column CSV and check if it has a valid CSV format
   def mime_type
     @mime_type ||= begin
       type = `file --b --mime-type '#{path_to_file}'`.strip
-      if type == 'text/plain' && csv?
+      if type == 'text/plain' && valid_csv?
         'text/csv'
       else
         type
@@ -129,15 +133,17 @@ class FileManager
     FileUtils.mkdir_p(quarantine_folder)
   end
 
-  def csv?
+  def valid_csv?
     contents = File.read(path_to_file)
     csv_table = CSV.parse(contents, headers: true)
 
-    # Ensure there is at least one row
     return false if csv_table.empty?
 
     # Check if every row matches the header length
     header_size = csv_table.headers.compact.size
+
+    return false if header_size < 1
+
     csv_table.all? { |row| row.size == header_size }
   rescue CSV::MalformedCSVError
     # If the file is not a valid CSV (e.g., mismatched quotes),
