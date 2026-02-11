@@ -138,11 +138,7 @@ class FileManager
 
     # Check if every row matches the header length
     header_size = csv_table.headers.compact.size
-    csv_table.each do |row|
-      return false if row.size != header_size
-    end
-
-    true
+    csv_table.all? { |row| row.size == header_size }
   rescue CSV::MalformedCSVError
     # If the file is not a valid CSV (e.g., mismatched quotes),
     # it raises an error and we return false.
