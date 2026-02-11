@@ -51,6 +51,12 @@ class FileManager
   # So we have to explicitly set mime-type as `text/csv` for a single-column CSV and check if it has a valid CSV format
   def mime_type
     @mime_type ||= begin
+      type_with_filename =  `file --b --mime-type '#{path_to_file}'`.strip
+      Rails.logger.debug "**" * 100
+      Rails.logger.debug type_with_filename
+      puts "**" * 100
+      puts type_with_filename
+
       type = `file --b --mime-type '#{path_to_file}'`.strip
       if type == 'text/plain' && valid_csv?
         'text/csv'
