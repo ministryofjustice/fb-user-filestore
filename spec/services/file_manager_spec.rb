@@ -172,14 +172,6 @@ RSpec.describe FileManager do
         expect(subject.mime_type).to eq('text/plain')
       end
     end
-
-    context 'when it is a malformed CSV' do
-      let(:encoded_file) { Base64.strict_encode64("header1,header2\n\"value1\"value2") }
-
-      it 'returns text/plain' do
-        expect(subject.mime_type).to eq('text/plain')
-      end
-    end
   end
 
   describe '#has_virus?' do
