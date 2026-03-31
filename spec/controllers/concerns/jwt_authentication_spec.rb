@@ -25,7 +25,6 @@ RSpec.describe 'Concerns::JWTAuthentication' do
 
   before do
     allow(Adapters::ServiceTokenCacheClient).to receive(:new).and_return(fake_client)
-    allow(fake_client).to receive(:get).with('service-slug').and_return(service_token)
     allow(fake_client).to receive(:public_key_for).with(service_slug).and_return(public_key)
 
     request.headers.merge!(headers)

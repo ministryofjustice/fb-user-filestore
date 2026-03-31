@@ -10,7 +10,8 @@ class DownloadsController < ApplicationController
     else
       render json: { code: 404, name: 'not-found' }, status: 404
     end
-  rescue StandardError
+  rescue StandardError => e
+    Rails.logger.warn("Download error #{e}")
     return error_download_server_error
   end
 
@@ -18,6 +19,7 @@ class DownloadsController < ApplicationController
 
   def check_download_params
     if request.headers['x-encrypted-user-id-and-token'].blank?
+      Rails.logger.warn('x-encrypted-user-id-and-token header is missing')
       return render json: { code: 403, name: 'forbidden.user-id-token-missing' }, status: 403
     end
 
@@ -48,19 +50,6 @@ class DownloadsController < ApplicationController
                             file_fingerprint: file_fingerprint,
                             days_to_live: days_to_live,
                             cipher_key: Digest::MD5.hexdigest(request.headers['x-encrypted-user-id-and-token'])).call
-  end
-
-  def error_large_file(size)
-    render json: { code: 400,
-                   name: 'invalid.too-large',
-                   max_size: params[:policy][:max_size],
-                   size: size }, status: 400
-  end
-
-  def error_unsupported_file_type(type)
-    render json: { code: 400,
-                   name: 'invalid type',
-                   type: type }, status: 400
   end
 
   def error_download_server_error

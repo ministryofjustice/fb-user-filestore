@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/ministryofjustice/fb-user-filestore/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/fb-user-filestore/tree/master)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/fb-user-filestore/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/fb-user-filestore/tree/main)
 
 # fb-user-filestore
 
@@ -18,7 +18,7 @@ make spec
 
 Continuous Integration (CI) is enabled on this project via CircleCI.
 
-On merge to master tests are executed and if green deployed to the test environment. This build can then be promoted to production
+On merge to main tests are executed and if green deployed to the test environment. This build can then be promoted to production
 
 ## Making API calls
 
@@ -43,4 +43,17 @@ response = `curl -X GET --header "x-access-token: #{JWT.encode(jwt_payload, 'ser
 hash = JSON.parse(response)
 
 File.open('/tmp/out', 'wb') {|f| f.write Base64.strict_decode64(hash['file']) }
+```
+
+## Troubleshooting
+
+### Error: "The specified bucket does not exist"
+```shell
+user-filestore-api  | [UploadsController] Unexpected error: The specified bucket does not exist
+user-filestore-api  | Completed 503 Service Unavailable in 437ms (Views: 0.3ms | Allocations: 163352)
+```
+### Solution: 
+Execute the following command from `localstack-main` container
+```shell 
+docker exec -it localstack-main /bin/sh  -c "awslocal s3api create-bucket --bucket moj-formbuilder"
 ```

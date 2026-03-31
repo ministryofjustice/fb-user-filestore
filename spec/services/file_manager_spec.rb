@@ -4,7 +4,6 @@ RSpec.describe FileManager do
   let(:file) { file_fixture('hello_world.txt') }
   let(:encoded_file) { Base64.strict_encode64(file.read) }
   let(:user_id) { SecureRandom.uuid }
-  let(:service_token) { SecureRandom.hex }
   let(:service_slug) { 'service-slug' }
   let(:encrypted_user_id_and_token) { SecureRandom.hex(16) }
   let(:bucket) { ENV['AWS_S3_BUCKET_NAME'] }
@@ -24,9 +23,9 @@ RSpec.describe FileManager do
     let(:filename) { subject.send(:random_filename) }
 
     it 'expect file to be saved to disk' do
-      expect(File.exists?("tmp/files/quarantine/#{filename}")).to be_falsey
+      expect(File.exist?("tmp/files/quarantine/#{filename}")).to be_falsey
       subject.save_to_disk
-      expect(File.exists?("tmp/files/quarantine/#{filename}")).to be_truthy
+      expect(File.exist?("tmp/files/quarantine/#{filename}")).to be_truthy
     end
   end
 

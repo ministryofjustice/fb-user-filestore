@@ -16,23 +16,29 @@ class UploadsController < ApplicationController
         days_to_live: params[:policy][:expires]
       }
     )
-    Rails.logger.info('Created file manager, saving to disk...')
+
+    log('Created file manager, saving to disk...')
     @file_manager.save_to_disk
-    Rails.logger.info('Saved file to disk')
+    log('Saved file to disk')
+
     if @file_manager.file_too_large?
+      log('File is too large')
       return error_large_file(@file_manager.file_size)
     end
 
     unless @file_manager.type_permitted?
+      log('File type is not permitted')
       return error_unsupported_file_type(@file_manager.mime_type)
     end
-    Rails.logger.info('Virus check starting....')
+
+    log('Virus check starting...')
     if @file_manager.has_virus?
       return error_virus_error
     end
-    Rails.logger.info('Virus check finished. Checking if file already exists')
+    log('Virus check finished. Checking if file already exists')
+
     if @file_manager.file_already_exists?
-      Rails.logger.info('File exists, returning')
+      log('File exists, returning')
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
         size: @file_manager.file_size,
@@ -43,9 +49,9 @@ class UploadsController < ApplicationController
       render json: hash, status: :ok
     else
       # async?
-      Rails.logger.info('Uploading file....')
+      log('Uploading file...')
       @file_manager.upload
-      Rails.logger.info('Upload to remote storage complete')
+      log('Upload to remote storage complete, returning')
       hash = {
         fingerprint: "#{@file_manager.fingerprint_with_prefix}",
         size: @file_manager.file_size,
@@ -57,6 +63,7 @@ class UploadsController < ApplicationController
     end
   rescue StandardError => e
     Sentry.capture_exception(e)
+    log("Unexpected error: #{e}")
     return error_upload_server_error
   ensure
     @file_manager.delete_file if @file_manager
@@ -65,32 +72,35 @@ class UploadsController < ApplicationController
   private
 
   def check_upload_params
+    log('Checking upload params...')
+
     if params[:file].blank?
-      return render json: { code: 400, name: 'invalid.file-missing' }, status: 400
+      return render json: { code: 400, name: 'error.file-missing' }, status: 400
     end
 
     if params[:user_id].blank?
-      return render json: { code: 400, name: 'invalid.user-id-missing' }, status: 400
+      return render json: { code: 400, name: 'error.user-id-missing' }, status: 400
     end
 
     unless @jwt_payload['sub'] == params[:user_id]
-      raise Concerns::JWTAuthentication::SubjectMismatchError
+      log('There is a mismatch between the user_id and the jwt sub')
+      return render json: { code: 403, name: 'error.user-id-sub-mismatch' }, status: 403
     end
 
     if params[:encrypted_user_id_and_token].blank?
-      return render json: { code: 403, name: 'forbidden.user-id-token-missing' }, status: 403
+      return render json: { code: 403, name: 'error.user-id-token-missing' }, status: 403
     end
 
     if params[:service_slug].blank?
-      return render json: { code: 400, name: 'invalid.service-slug-missing' }, status: 400
+      return render json: { code: 400, name: 'error.service-slug-missing' }, status: 400
     end
 
     if params[:policy].blank?
-      return render json: { code: 400, name: 'invalid.policy-missing' }, status: 400
+      return render json: { code: 400, name: 'error.policy-missing' }, status: 400
     end
 
     if params[:policy][:max_size].blank?
-      return render json: { code: 400, name: 'invalid.policy-max-size-missing' }, status: 400
+      return render json: { code: 400, name: 'error.policy-max-size-missing' }, status: 400
     end
 
     if params[:policy][:allowed_types].blank?
@@ -117,12 +127,16 @@ class UploadsController < ApplicationController
 
   def error_upload_server_error
     render json: { code: 503,
-                   name: 'unavailable.file-store-failed' }, status: 503
+                   name: 'error.file-store-failed' }, status: 503
   end
 
   def error_virus_error
     render json: { code: 400,
                    name: 'invalid.virus' }, status: 400
+  end
+
+  def log(str)
+    Rails.logger.info("[#{self.class.name}] #{str}")
   end
 
   def bucket

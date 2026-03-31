@@ -27,7 +27,6 @@ RSpec.describe 'FileUpload API', type: :request do
   before :each do
     disable_malware_scanner!
     allow(ServiceTokenService).to receive(:new).with(service_slug: 'service-slug').and_return(fake_service)
-    allow(fake_service).to receive(:get).and_return('service-token')
     allow(fake_service).to receive(:public_key).and_return(public_key)
     allow(Aws::S3::Client).to receive(:new).and_return(s3)
   end
@@ -40,7 +39,7 @@ RSpec.describe 'FileUpload API', type: :request do
       let(:now) { Time.now.utc }
 
       around :each do |example|
-        Timecop.freeze(now) do
+        travel_to(now) do
           example.run
         end
       end
@@ -177,7 +176,7 @@ RSpec.describe 'FileUpload API', type: :request do
 
         body = JSON.parse(response.body)
         expect(body['code']).to eql(503)
-        expect(body['name']).to eql('unavailable.file-store-failed')
+        expect(body['name']).to eql('error.file-store-failed')
       end
     end
 
@@ -188,7 +187,7 @@ RSpec.describe 'FileUpload API', type: :request do
       let(:now) { Time.now.utc }
 
       around :each do |example|
-        Timecop.freeze(now) do
+        travel_to(now) do
           example.run
         end
       end

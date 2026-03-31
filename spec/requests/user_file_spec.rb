@@ -19,7 +19,7 @@ RSpec.describe 'user filestore API', type: :request do
       end
 
       it 'returns json error message' do
-        expect(json['errors'].first['title']).to eq(I18n.t('error_messages.token_not_valid.title'))
+        expect(json['name']).to eq('error.token_not_valid')
       end
     end
 
@@ -34,7 +34,7 @@ RSpec.describe 'user filestore API', type: :request do
       end
 
       it 'returns json error message' do
-        expect(json['errors'].first['title']).to eq(I18n.t('error_messages.token_not_present.title'))
+        expect(json['name']).to eq('error.token_not_present')
       end
     end
 
@@ -43,12 +43,13 @@ RSpec.describe 'user filestore API', type: :request do
         allow_any_instance_of(UploadsController).to receive(:verify_token!).and_raise(StandardError)
         post "/service/#{service_slug}/user/#{user_identifier}"
       end
+
       it 'returns a 500 status' do
         expect(response).to have_http_status(500)
       end
 
       it 'returns json error message' do
-        expect(json['errors'].first['title']).to eq(I18n.t('error_messages.internal_server_error.title'))
+        expect(json['name']).to eq('error.internal_server_error')
       end
     end
   end
