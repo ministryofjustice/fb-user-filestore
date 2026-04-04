@@ -123,6 +123,57 @@ RSpec.describe FileManager do
     end
   end
 
+  describe '#mime_type' do
+    before :each do
+      subject.save_to_disk
+    end
+
+    context 'when it is a multi-column CSV' do
+      let(:encoded_file) { Base64.strict_encode64("header1,header2\nvalue1,value2") }
+
+      it 'returns text/csv' do
+        expect(subject.mime_type).to eq('text/csv')
+      end
+    end
+
+    context 'when it is a single-column CSV' do
+      let(:encoded_file) { Base64.strict_encode64("header\nvalue1\nvalue2") }
+
+      it 'returns text/csv' do
+        expect(subject.mime_type).to eq('text/csv')
+      end
+    end
+
+    context 'when it is an empty CSV (headers only)' do
+      let(:encoded_file) { Base64.strict_encode64("header1,header2\n") }
+      it 'returns text/plain (not recognized as CSV)' do
+        expect(subject.mime_type).to eq('text/plain')
+      end
+    end
+
+    context 'when row lengths are inconsistent' do
+      let(:encoded_file) { Base64.strict_encode64("header1,header2\nvalue1,value2,value3") }
+      it 'returns text/plain (not recognized as CSV)' do
+        expect(subject.mime_type).to eq('text/plain')
+      end
+    end
+
+    context 'when it is plain text' do
+      let(:encoded_file) { Base64.strict_encode64("This is just some text.") }
+
+      it 'returns text/plain' do
+        expect(subject.mime_type).to eq('text/plain')
+      end
+    end
+
+    context 'when it is a malformed CSV (mismatched quotes)' do
+      let(:encoded_file) { Base64.strict_encode64("header1,header2\n\"value1\"value2,value3") }
+      it 'returns text/plain' do
+        expect(subject.mime_type).to eq('text/plain')
+      end
+    end
+  end
+
   describe '#has_virus?' do
     context 'when file has a virus' do
       it 'returns true' do
