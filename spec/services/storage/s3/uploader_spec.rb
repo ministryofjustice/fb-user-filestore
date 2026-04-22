@@ -68,7 +68,7 @@ RSpec.describe Storage::S3::Uploader do
       end
 
       it 'returns creation timestamp' do
-        expect(subject.created_at).to eq(now)
+        expect(subject.created_at.utc.to_s).to eq(now.to_s)
       end
     end
   end
