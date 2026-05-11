@@ -9,16 +9,16 @@ gem 'jwt'
 gem 'mime-types'
 gem 'nokogiri'
 gem 'puma', '~> 6.4'
-gem 'rails', '~> 7.2.3.1'
+gem 'rails', '~> 8.0.0.0'
 gem 'rexml'
-gem 'sentry-rails', '~> 5.13'
+gem 'sentry-rails', '~> 6.0', '>= 6.0.0'
 gem 'sentry-ruby', '~> 5.13'
 gem 'tzinfo-data'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'dotenv-rails'
-  gem 'rspec-rails'
+  gem 'dotenv-rails', '>= 3.1.3'
+  gem 'rspec-rails', '>= 8.0.0'
   gem 'simplecov'
   gem 'simplecov-console'
 end
