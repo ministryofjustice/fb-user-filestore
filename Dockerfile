@@ -1,6 +1,6 @@
-FROM ruby:3.2.2-alpine3.18
+FROM ruby:3.3.11-alpine
 
-RUN apk add --update --virtual .build-deps build-base libgcrypt-dev nodejs postgresql-contrib postgresql-dev
+RUN apk add --update --virtual .build-deps build-base libgcrypt-dev nodejs postgresql-contrib postgresql-dev yaml-dev
 RUN apk add file
 RUN apk add clamav-daemon
 
