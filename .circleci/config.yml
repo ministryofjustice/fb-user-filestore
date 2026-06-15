@@ -191,7 +191,7 @@ workflows:
           filters:
             branches:
               only:
-                - add-deploy-to-live-gate-testing-test-pipeline
+                - main
       - deploy_to_test_dev:
           context: *moj-forms-context
           requires:
@@ -207,7 +207,7 @@ workflows:
             - deploy_to_test_production
           filters:
             branches:
-              only: add-deploy-to-live-gate-testing-test-pipeline
+              only: main
       - production_deploy_approval:
           type: approval
           requires:
