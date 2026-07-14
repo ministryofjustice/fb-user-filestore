@@ -1,4 +1,4 @@
-FROM ruby:3.3.11-alpine
+FROM ruby:3.4.9-alpine
 
 RUN apk add --update --virtual .build-deps build-base libgcrypt-dev nodejs postgresql-contrib postgresql-dev yaml-dev
 RUN apk add file
