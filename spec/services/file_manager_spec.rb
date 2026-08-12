@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe FileManager do
   let(:file) { file_fixture('hello_world.txt') }
   let(:encoded_file) { Base64.strict_encode64(file.read) }
+  let(:original_filename) { 'hello_world.txt' }
+  let(:original_file_content_type) { 'text/plain' }
   let(:user_id) { SecureRandom.uuid }
   let(:service_slug) { 'service-slug' }
   let(:encrypted_user_id_and_token) { SecureRandom.hex(16) }
@@ -12,6 +14,8 @@ RSpec.describe FileManager do
   let(:subject) do
     described_class.new(
       encoded_file: encoded_file,
+      original_filename: original_filename,
+      original_file_content_type: original_file_content_type,
       user_id: user_id,
       service_slug: service_slug,
       encrypted_user_id_and_token: encrypted_user_id_and_token,
@@ -39,6 +43,8 @@ RSpec.describe FileManager do
     context 'when file is too large' do
       subject do
         described_class.new(encoded_file: encoded_file,
+                            original_filename: 'bitmap.bmp',
+                            original_file_content_type: 'image/bmp',
                             user_id: user_id,
                             service_slug: service_slug,
                             encrypted_user_id_and_token: encrypted_user_id_and_token,
@@ -54,6 +60,8 @@ RSpec.describe FileManager do
     context 'when file is within size limit' do
       subject do
         described_class.new(encoded_file: encoded_file,
+                            original_filename: 'bitmap.bmp',
+                            original_file_content_type: 'image/bmp',
                             user_id: user_id,
                             service_slug: service_slug,
                             encrypted_user_id_and_token: encrypted_user_id_and_token,
@@ -77,6 +85,8 @@ RSpec.describe FileManager do
     context 'when file is permitted' do
       subject do
         described_class.new(encoded_file: encoded_file,
+                            original_filename: 'image.png',
+                            original_file_content_type: 'image/png',
                             user_id: user_id,
                             service_slug: service_slug,
                             encrypted_user_id_and_token: encrypted_user_id_and_token,
@@ -93,6 +103,8 @@ RSpec.describe FileManager do
       context 'when allowed types are present' do
         subject do
           described_class.new(encoded_file: encoded_file,
+                              original_filename: 'image.png',
+                              original_file_content_type: 'image/png',
                               user_id: user_id,
                               service_slug: service_slug,
                               encrypted_user_id_and_token: encrypted_user_id_and_token,
@@ -108,6 +120,8 @@ RSpec.describe FileManager do
       context 'when mime type is invalid' do
         subject do
           described_class.new(encoded_file: encoded_file,
+                              original_filename: 'image.wps-writer',
+                              original_file_content_type: 'application/wps-writer',
                               user_id: user_id,
                               service_slug: service_slug,
                               encrypted_user_id_and_token: encrypted_user_id_and_token,

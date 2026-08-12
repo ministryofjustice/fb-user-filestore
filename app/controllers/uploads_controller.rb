@@ -6,6 +6,8 @@ class UploadsController < ApplicationController
   def create
     @file_manager = FileManager.new(
       encoded_file: params[:file],
+      original_filename: params[:original_filename],
+      original_file_content_type: params[:original_file_content_type],
       user_id: params[:user_id],
       service_slug: params[:service_slug],
       encrypted_user_id_and_token: params[:encrypted_user_id_and_token],
@@ -17,6 +19,7 @@ class UploadsController < ApplicationController
       }
     )
 
+    log("Uploaded file details => file_extension:#{File.extname(@file_manager.original_filename)}, content_type:#{@file_manager.original_file_content_type}, timestamp: #{Time.now.utc}")
     log('Created file manager, saving to disk...')
     @file_manager.save_to_disk
     log('Saved file to disk')
@@ -75,6 +78,14 @@ class UploadsController < ApplicationController
     log('Checking upload params...')
 
     if params[:file].blank?
+      return render json: { code: 400, name: 'error.file-missing' }, status: 400
+    end
+
+    if params[:original_filename].blank?
+      return render json: { code: 400, name: 'error.file-missing' }, status: 400
+    end
+
+    if params[:original_file_content_type].blank?
       return render json: { code: 400, name: 'error.file-missing' }, status: 400
     end
 
