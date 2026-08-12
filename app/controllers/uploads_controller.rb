@@ -6,6 +6,8 @@ class UploadsController < ApplicationController
   def create
     @file_manager = FileManager.new(
       encoded_file: params[:file],
+      original_filename: params[:original_filename],
+      original_file_content_type: params[:original_file_content_type],
       user_id: params[:user_id],
       service_slug: params[:service_slug],
       encrypted_user_id_and_token: params[:encrypted_user_id_and_token],
@@ -15,6 +17,15 @@ class UploadsController < ApplicationController
         allowed_types: params[:policy][:allowed_types],
         days_to_live: params[:policy][:expires]
       }
+    )
+
+    masked_file_name = StringUtils.mask(File.basename(@file_manager.original_filename, '.*'))
+    log(
+      'Uploaded File Details: ' \
+        "file_masked_name=#{masked_file_name}, " \
+        "file_extension=#{File.extname(@file_manager.original_filename)}, " \
+        "file_mimetype=#{@file_manager.original_file_content_type}, " \
+        "timestamp=#{Time.now.utc}"
     )
 
     log('Created file manager, saving to disk...')
@@ -33,10 +44,12 @@ class UploadsController < ApplicationController
 
     log('Virus check starting...')
     if @file_manager.has_virus?
+      log("Uploaded file contains virus: #{masked_file_name}")
+
       return error_virus_error
     end
-    log('Virus check finished. Checking if file already exists')
 
+    log('Virus check finished. Checking if file already exists')
     if @file_manager.file_already_exists?
       log('File exists, returning')
       hash = {
@@ -75,6 +88,14 @@ class UploadsController < ApplicationController
     log('Checking upload params...')
 
     if params[:file].blank?
+      return render json: { code: 400, name: 'error.file-missing' }, status: 400
+    end
+
+    if params[:original_filename].blank?
+      return render json: { code: 400, name: 'error.file-missing' }, status: 400
+    end
+
+    if params[:original_file_content_type].blank?
       return render json: { code: 400, name: 'error.file-missing' }, status: 400
     end
 

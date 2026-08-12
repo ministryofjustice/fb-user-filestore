@@ -52,6 +52,26 @@ RSpec.describe UploadsController, type: :controller do
         end
       end
 
+      context 'missing original_filename' do
+        it 'returns error' do
+          url_params = { service_slug: 'service-slug', user_id: user_id }
+          json_params = json
+          json_params.delete(:original_filename)
+          post :create, params: url_params.merge(json_params)
+          expect(response).to be_bad_request
+        end
+      end
+
+      context 'missing original_file_content_type' do
+        it 'returns error' do
+          url_params = { service_slug: 'service-slug', user_id: user_id }
+          json_params = json
+          json_params.delete(:original_file_content_type)
+          post :create, params: url_params.merge(json_params)
+          expect(response).to be_bad_request
+        end
+      end
+
       context 'missing user_id' do
         it 'returns error' do
           url_params = { service_slug: 'service-slug', user_id: '' }
