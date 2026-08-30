@@ -7,11 +7,11 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jwt'
 gem 'mime-types'
-gem 'nokogiri'
+gem 'nokogiri', '>= 1.19.4'
 gem 'puma', '~> 6.4'
 gem 'rails', '~> 8.1.3.1'
 gem 'rexml'
-gem 'sentry-rails', '~> 5.13'
+gem 'sentry-rails', '~> 6.0', '>= 6.0.0'
 gem 'sentry-ruby', '~> 5.13'
 gem 'tzinfo-data'
 
