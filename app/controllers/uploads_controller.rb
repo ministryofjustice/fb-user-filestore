@@ -18,7 +18,7 @@ class UploadsController < ApplicationController
         days_to_live: params[:policy][:expires]
       }
     )
-
+    aadasd
     log("Uploaded file details => file_extension:#{File.extname(@file_manager.original_filename)}, content_type:#{@file_manager.original_file_content_type}, timestamp: #{Time.now.utc}")
     log('Created file manager, saving to disk...')
     @file_manager.save_to_disk
@@ -39,7 +39,6 @@ class UploadsController < ApplicationController
       return error_virus_error
     end
     log('Virus check finished. Checking if file already exists')
-
     if @file_manager.file_already_exists?
       log('File exists, returning')
       hash = {
