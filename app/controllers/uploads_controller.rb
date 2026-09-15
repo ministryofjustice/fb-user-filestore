@@ -18,7 +18,7 @@ class UploadsController < ApplicationController
         days_to_live: params[:policy][:expires]
       }
     )
-    aadasd
+
     log("Uploaded file details => file_extension:#{File.extname(@file_manager.original_filename)}, content_type:#{@file_manager.original_file_content_type}, timestamp: #{Time.now.utc}")
     log('Created file manager, saving to disk...')
     @file_manager.save_to_disk
@@ -66,6 +66,7 @@ class UploadsController < ApplicationController
   rescue StandardError => e
     Sentry.capture_exception(e)
     log("Unexpected error: #{e}")
+    NotificationService.notify("Unexpected error: #{e}") if webhook.present?
     return error_upload_server_error
   ensure
     @file_manager.delete_file if @file_manager
@@ -151,5 +152,9 @@ class UploadsController < ApplicationController
 
   def bucket
     ENV['AWS_S3_BUCKET_NAME']
+  end
+
+  def webhook
+    ENV['SLACK_NOTIFICATION_WEBHOOK']
   end
 end

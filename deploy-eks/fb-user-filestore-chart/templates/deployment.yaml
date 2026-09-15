@@ -90,6 +90,11 @@ spec:
               secretKeyRef:
                 name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
                 key: sentry_dsn
+          - name: SLACK_NOTIFICATION_WEBHOOK
+            valueFrom:
+              secretKeyRef:
+                name: fb-user-filestore-api-secrets-{{ .Values.environmentName }}
+                key: slack_notification_webhook
           - name: AWS_S3_EXTERNAL_BUCKET_NAME
             valueFrom:
               secretKeyRef:
