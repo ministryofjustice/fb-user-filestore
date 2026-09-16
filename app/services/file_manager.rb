@@ -2,12 +2,14 @@ require 'securerandom'
 require 'digest'
 
 class FileManager
-  attr_reader :file
+  attr_reader :file, :original_filename, :original_file_content_type
 
-  def initialize(encoded_file:, user_id:, service_slug:,
+  def initialize(encoded_file:, original_filename:, original_file_content_type:, user_id:, service_slug:,
     encrypted_user_id_and_token:, bucket:, options: {}
   )
     @encoded_file = encoded_file
+    @original_filename = original_filename
+    @original_file_content_type = original_file_content_type
     @user_id = user_id
     @service_slug = service_slug
     @encrypted_user_id_and_token = encrypted_user_id_and_token

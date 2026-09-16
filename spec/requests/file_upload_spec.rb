@@ -166,7 +166,14 @@ RSpec.describe 'FileUpload API', type: :request do
       let(:encoded_file) { Base64.strict_encode64(file) }
       let(:json) { json_request(encoded_file) }
 
-      let(:file_manager) { double('file_manager', delete_file: true) }
+      let(:file_manager) do
+        double(
+          'file_manager',
+          original_filename: 'hello_world.txt',
+          original_file_content_type: 'text/plain',
+          delete_file: true
+        )
+      end
 
       it 'returns relevant error' do
         allow(FileManager).to receive(:new).and_return(file_manager)
