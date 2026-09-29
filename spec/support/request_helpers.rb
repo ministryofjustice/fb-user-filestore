@@ -22,6 +22,8 @@ def json_request(encoded_file, options = {})
   {
     "encrypted_user_id_and_token": '12345678901234567890123456789012',
     "file": encoded_file,
+    "original_filename": "hello_world.txt",
+    "original_file_content_type": "text/plain",
     "policy": {
       "allowed_types": allowed_types,
         "max_size": '10240',
