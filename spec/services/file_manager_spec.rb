@@ -153,6 +153,66 @@ RSpec.describe FileManager do
     end
   end
 
+  describe "#mime_type" do
+    before do
+      allow(subject).to receive(:path_to_file).and_return("/tmp/file/quarantine")
+    end
+
+    context "when the detected MIME type is application/pdf" do
+      before do
+        allow(subject).to receive(:`).and_return("application/pdf")
+      end
+
+      it "returns the detected MIME type without whitespace" do
+        expect(subject.mime_type).to eq("application/pdf")
+      end
+    end
+
+    context "when the file is declared as CSV and detected as text/plain" do
+      let(:original_file_content_type) { "text/csv" }
+
+      before do
+        allow(subject).to receive(:`).and_return("text/plain")
+      end
+
+      it "returns text/csv" do
+        expect(subject.mime_type).to eq("text/csv")
+      end
+    end
+
+    context "when the file is declared as CSV but detected as another MIME type" do
+      let(:original_file_content_type) { "text/csv" }
+
+      before do
+        allow(subject).to receive(:`).and_return("application/octet-stream")
+      end
+
+      it "returns the detected MIME type" do
+        expect(subject.mime_type).to eq("application/octet-stream")
+      end
+    end
+
+    context "when the file is not declared as CSV and is detected as text/plain" do
+      let(:original_file_content_type) { "text/plain" }
+
+      before do
+        allow(subject).to receive(:`).and_return("text/plain")
+      end
+
+      it "returns text/plain" do
+        expect(subject.mime_type).to eq("text/plain")
+      end
+    end
+
+    it "checks the MIME type of the quarantined file" do
+      expect(subject).to receive(:`).with(
+        "file --b --mime-type '/tmp/file/quarantine'"
+      ).and_return("application/pdf")
+
+      expect(subject.mime_type).to eq("application/pdf")
+    end
+  end
+
   after :each do
     FileUtils.rm(Dir.glob('tmp/files/quarantine/*'), force: true)
   end

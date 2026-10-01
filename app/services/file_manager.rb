@@ -47,7 +47,9 @@ class FileManager
   end
 
   def mime_type
-    @mime_type ||= `file --b --mime-type '#{path_to_file}'`.strip
+    detected_mime_type ||= `file --b --mime-type '#{path_to_file}'`.strip
+    return "text/csv" if csv_file_with_plain_text_mime?(detected_mime_type)
+    detected_mime_type
   end
 
   def upload
@@ -125,5 +127,9 @@ class FileManager
 
   def quarantine_folder
     Rails.root.join('tmp/files/quarantine/')
+  end
+
+  def csv_file_with_plain_text_mime?(detected_mime_type)
+    @original_file_content_type == "text/csv" && detected_mime_type == "text/plain"
   end
 end
