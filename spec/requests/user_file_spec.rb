@@ -3,9 +3,6 @@ require 'rails_helper'
 RSpec.describe 'user filestore API', type: :request do
   let(:service_slug) { 'my-service' }
   let(:user_identifier) { SecureRandom::uuid }
-  let(:headers) do
-    { 'content-type' => 'application/json' }
-  end
 
   describe 'request error messages' do
     context 'exception TokenNotValidError raised' do
