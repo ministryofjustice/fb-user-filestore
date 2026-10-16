@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe 'Concerns::JWTAuthentication' do
   let(:service_token) { 'service-token' }
   let(:service_slug) { 'service-slug' }
-  let(:body) { response.body }
   let(:parsed_body) { JSON.parse(response.body) }
   let(:payload) { {} }
   let(:headers) { {} }

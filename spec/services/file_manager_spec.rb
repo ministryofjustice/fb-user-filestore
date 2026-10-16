@@ -9,7 +9,6 @@ RSpec.describe FileManager do
   let(:service_slug) { 'service-slug' }
   let(:encrypted_user_id_and_token) { SecureRandom.hex(16) }
   let(:bucket) { ENV['AWS_S3_BUCKET_NAME'] }
-  let(:s3) { Aws::S3::Client.new(stub_responses: true) }
 
   let(:subject) do
     described_class.new(

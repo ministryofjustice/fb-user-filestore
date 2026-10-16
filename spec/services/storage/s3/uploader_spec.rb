@@ -6,7 +6,6 @@ RSpec.describe Storage::S3::Uploader do
   context 'when calling public methods' do
     let(:subject) { described_class.new(key: key, bucket: bucket) }
     let(:bucket) { ENV['AWS_S3_BUCKET_NAME'] }
-    let(:downloader) { Storage::S3::Downloader.new(key: key, bucket: bucket) }
     let(:s3) { Aws::S3::Client.new(stub_responses: true) }
 
     before :each do

@@ -8,10 +8,6 @@ RSpec.describe DownloadsController, type: :controller do
         'x-access-token-v2' => jwt
       }
     end
-    let(:payload_query_string) do
-      json = query_string_payload.to_json
-      base64 = Base64.strict_encode64(json)
-    end
     let(:user_id) { 'abc' }
     let(:service_slug) { 'service-slug' }
     let(:jwt) { JWT.encode({sub: user_id, iat: Time.current.to_i}, private_key, 'RS256') }
