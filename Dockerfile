@@ -1,4 +1,4 @@
-FROM ruby:3.4.9-alpine
+FROM ruby:4.0.9-alpine
 
 RUN apk add --update --virtual .build-deps build-base libgcrypt-dev nodejs postgresql-contrib postgresql-dev yaml-dev
 RUN apk add file
@@ -9,7 +9,7 @@ WORKDIR /usr/src/app
 COPY Gemfile Gemfile.lock .ruby-version ./
 
 ARG BUNDLE_FLAGS
-RUN gem install bundler
+RUN gem install bundler -v 4.0.24
 RUN bundle install --jobs 4 --retry 5 ${BUNDLE_FLAGS}
 
 COPY . .
