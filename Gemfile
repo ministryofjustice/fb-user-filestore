@@ -5,7 +5,7 @@ ruby file: '.ruby-version'
 
 gem 'aws-sdk-s3', '~> 1'
 gem 'ostruct'
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bootsnap', '>= 1.25.0', require: false
 gem 'jwt'
 gem 'mime-types'
 gem 'nokogiri'
